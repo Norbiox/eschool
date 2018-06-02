@@ -5,25 +5,19 @@ from .models import User
 from .models import *
 
 
-admin.site.register([User, Grade, Lesson, Note, Presence, Rate, Subject, Taught])
+admin.site.register([Grade, Lesson, Note, Presence, Rate, Subject, Taught])
 
-"""
+
 class StudentAdmin(admin.ModelAdmin):
-    fieldsets = [
-        ('Personal info',   {'fields': ['first_name', 'last_name', 'birth_date',\
-                                        'PESEL']}),
-        ('Contact info',    {'fields': ['email', 'address', 'phone']}),
-        ('School info',     {'fields': ['group']})
-    ]
     list_display = ('get_full_name', 'group', 'email')
     list_filter = ('group',)
-"""
+
 
 class StudentInline(admin.TabularInline):
     model = Student
     extra = 3
 
-admin.site.register(Student)
+admin.site.register(Student, StudentAdmin)
 
 
 class GroupAdmin(admin.ModelAdmin):

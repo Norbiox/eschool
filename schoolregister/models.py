@@ -150,6 +150,7 @@ class Grade(models.Model):
     given_by = models.ForeignKey(Teacher, on_delete=models.CASCADE)
     rate = models.ForeignKey(Rate, null=True, blank=True, on_delete=models.CASCADE)
     weight = models.IntegerField(default=1)
+    description = models.CharField(max_length=200, default='', null=True, blank=True)
     datetime = models.DateTimeField(auto_now=True)
 
     def __str__(self):
