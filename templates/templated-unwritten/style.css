@@ -1,0 +1,289 @@
+/*
+Design by TEMPLATED
+http://templated.co
+Released for free under the Creative Commons Attribution License
+
+Name       : Unwritten
+Description: A two-column, fixed-width design with a bright color scheme.
+Version    : 1.0
+Released   : 20120710
+*/
+
+* {
+	padding: 0;
+	margin: 0;
+}
+
+a {
+	text-decoration: underline;
+	color: #336784;
+}
+
+a:hover {
+	text-decoration: none;
+}
+
+body {
+	color: #595350;
+	line-height: 2em;
+	background: #A7A4A1 url(images/bg.jpg);
+	font-size: 12pt;
+}
+
+body,input {
+	font-family: Kreon, sans-serif;
+}
+
+br.clearfix {
+	clear: both;
+}
+
+strong {
+	color: #000;
+}
+
+h1,h2,h3,h4 {
+	font-weight: normal;
+	text-transform: lowercase;
+}
+
+h2 {
+	font-size: 2.25em;
+}
+
+h2,h3,h4 {
+	color: #000;
+	font-family: Satisfy, script;
+	margin-bottom: 1.25em;
+}
+
+h3 {
+	font-size: 1.75em;
+}
+
+h4 {
+	font-size: 1.5em;
+}
+
+img.alignleft {
+	margin: 5px 20px 20px 0;
+	float: left;
+}
+
+img.aligntop {
+	margin: 5px 0 20px 0;
+}
+
+p {
+	margin-bottom: 1.75em;
+}
+
+ul {
+	margin-bottom: 1.75em;
+}
+
+ul h4 {
+	margin-bottom: 0.4em;
+}
+
+.post {
+	margin: 0 0 40px 0;
+}
+
+#content {
+	background: #FFF;
+	width: 700px;
+	padding: 40px;
+	float: left;
+	box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.25);
+}
+
+#footer {
+	text-align: center;
+	padding: 30px 0 90px 0;
+	color: #A59D93;
+	text-shadow: 1px 1px 0px rgba(255,255,255,0.75);
+}
+
+#footer a {
+	color: #A59D93;
+}
+
+#header {
+	padding: 0px 40px 0px 40px;
+	height: 175px;
+	position: relative;
+	width: 1100px;
+}
+
+#logo {
+	position: absolute;
+	line-height: 125px;
+	top: 0;
+	left: 20px;
+	height: 125px;
+	text-shadow: 1px 1px 0px rgba(255,255,255,0.9);
+}
+
+#logo a {
+	text-decoration: none;
+	color: #000;
+}
+
+#logo h1 {
+	font-family: Satisfy, script;
+	font-size: 3em;
+}
+
+#menu {
+	bottom: 0;
+	font-family: Kreon, sans-serif;
+	line-height: 65px;
+	left: 0;
+	position: absolute;
+	width: 1100px;
+	margin: 0 0 0 0;
+	height: 65px;
+	background: #336784 url(images/bg2.jpg);
+	padding: 0 40px 0 40px;
+	box-shadow: inset 0px 0px 5px 0px rgba(0,0,0,0.25), 0px 0px 6px 0px rgba(255,255,255,0.9);
+	text-shadow: 1px 1px 0px rgba(0,0,0,0.6);
+}
+
+#menu a {
+	font-size: 1.25em;
+	text-decoration: none;
+	color: #FFF;
+}
+
+#menu ul {
+	list-style: none;
+}
+
+#menu ul li {
+	display: inline;
+	padding: 0 20px 0 20px;
+}
+
+#menu ul li.first {
+	padding-left: 0;
+}
+
+#page {
+	width: 1180px;
+	padding: 0;
+	margin: 20px 0 20px 0;
+	position: relative;
+}
+
+#page .section-list {
+	list-style: none;
+	padding-left: 0;
+}
+
+#page .section-list li {
+	clear: both;
+	padding: 25px 0 25px 0;
+}
+
+#page ul {
+	list-style: none;
+}
+
+#page ul li {
+	border-top: solid 1px #B8B8B8;
+	padding: 15px 0 15px 0;
+}
+
+#page ul li.first {
+	padding-top: 0;
+	border-top: 0;
+}
+
+#col1 {
+	float: left;
+	width: 330px;
+	overflow: hidden;
+}
+
+#col2 {
+	width: 330px;
+	overflow: hidden;
+	margin: 0 0 0 365px;
+}
+
+#search {
+	line-height: 125px;
+	top: 0;
+	position: absolute;
+	right: 0;
+	height: 125px;
+}
+
+#search input.form-submit {
+	margin-left: 1em;
+	background: #336784 url(images/bg2.jpg);
+	font-family: Kreon, sans-serif;
+	border: 0;
+	color: #FFF;
+	padding: 7px;
+	text-shadow: 1px 1px 0px rgba(0,0,0,0.5);
+	box-shadow: inset 0px 0px 5px 0px rgba(0,0,0,0.25), 0px 0px 6px 0px rgba(255,255,255,0.9);
+}
+
+#search input.form-text {
+	padding: 8px;
+	border: 0;
+	background: rgba(62,59,57,0.5);
+	box-shadow: inset 0px 0px 5px 0px rgba(0,0,0,0.5), 0px 0px 6px 0px rgba(255,255,255,0.9);
+	color: #fff;
+	width: 290px;
+}
+
+#sidebar {
+	margin: 0 0 0 800px;
+	background: rgba(62,59,57,0.7);
+	width: 300px;
+	padding: 40px;
+	color: #CCCCCB;
+	box-shadow: inset 0px 0px 5px 0px rgba(0,0,0,0.5), 0px 0px 6px 0px rgba(255,255,255,0.9);
+	text-shadow: 1px 1px 0px rgba(0,0,0,0.4);
+}
+
+#sidebar a {
+	color: #FFF;
+}
+
+#sidebar h2, #sidebar h3, #sidebar h4 {
+	color: #FFF;
+}
+
+#sidebar ul {
+	list-style: none;
+}
+
+#sidebar ul li {
+	padding: 15px 0 15px 0;
+	border-top: solid 1px #8F8F8E;
+}
+
+#sidebar ul li.first {
+	border-top: 0;
+	padding-top: 0;
+}
+
+#splash {
+	padding: 40px;
+	position: relative;
+	background: #FFF;
+	margin: 20px 0 0 0;
+	height: 250px;
+	width: 1100px;
+	box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.25);
+}
+
+#wrapper {
+	margin: 20px auto 0 auto;
+	width: 1180px;
+	position: relative;
+}

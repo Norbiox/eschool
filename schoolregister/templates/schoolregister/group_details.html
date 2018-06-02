@@ -1,0 +1,27 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'schoolregister/style.css' %}" />
+
+<h2>Klasa {{ group.abbrev }}</h2>
+<p>Opiekun: {{ group.supervisor }}</p>
+<details>
+    <summary>
+        Uczniowie:
+    </summary>
+    <ol>
+        {% for student in group.student_set.all %}
+        <li><a href="{% url 'schoolregister:student_details' student.pk %}">{{ student }}</a></li>
+        {% endfor %}
+    </ol>
+</details>
+<details>
+    <summary>
+        Przedmioty:
+    </summary>
+    <ol>
+        {% for taught in group.taught_set.all %}
+        <li>
+            {{ taught.subject }}, prowadzący: <a href="{% url 'schoolregister:teacher_details' taught.teacher.pk %}">{{ taught.teacher }}</a>
+        </li>
+        {% endfor %}
+    </ol>
+</details>
