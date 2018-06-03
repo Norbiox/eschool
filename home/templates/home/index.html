@@ -3,7 +3,11 @@
 {% block title %}Welcome{% endblock %}
 
 {% block content %}
+{% if user.authenticated %}
+<h2>Hello, {{ user.first_name }}</h2>
+{% else %}
 <h2>Welcome</h2>
+{% endif %}
 <p>
     You're on eSchool homepage.
 </p>

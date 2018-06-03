@@ -1,15 +1,15 @@
-{% block menu %}
-<div id="menu">
+{% block nav %}
+<nav>
     <ul>
-        <li class="first current_page_item"><a href="#">Homepage</a></li>
+        <li><a href="{% url 'home:index' %}">Homepage</a></li>
         <li><a href="#">Blog</a></li>
         <li><a href="#">Articles</a></li>
         <li><a href="#">Photos</a></li>
         <li><a href="#">Information</a></li>
         <li><a href="#">Friends</a></li>
         <li><a href="#">About</a></li>
-        <li class="last"><a href="#">Contact</a></li>
+        <li><a href="{% url 'schoolregister:index' %}">SchoolRegister</a></li>
     </ul>
     <br class="clearfix" />
-</div>
+</nav>
 {% endblock %}

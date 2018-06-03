@@ -57,7 +57,7 @@ aside ul li.first {
 
 body {
 	color: #595350;
-	line-height: 2em;
+	/*line-height: 2em;*/
 	background: #A7A4A1 url(images/bg.jpg);
 	font-size: 12pt;
 }
@@ -282,6 +282,35 @@ ul h4 {
 	height: 250px;
 	width: 1100px;
 	box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.25);
+}
+
+
+#user-panel {
+	font-size: 1.1em;
+	top: 0;
+	position: absolute;
+	right: 0;
+	width: auto;
+	display: flex;
+	padding: 30px;
+}
+
+
+#user-panel a.button {
+	border: none;
+	text-decoration: none;
+	color: #FFF;
+	font-family: Kreon, sans-serif;
+	left: 0;
+	margin: 0 0 0 5px;
+	padding: 10px;
+	background: #336784 url(images/bg2.jpg);
+	text-shadow: 1px 1px 0px rgba(0,0,0,0.6);
+}
+
+#user-panel p {
+	margin-bottom: 0;
+	align-self: center;
 }
 
 #wrapper {

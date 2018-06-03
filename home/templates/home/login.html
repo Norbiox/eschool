@@ -5,7 +5,7 @@
 {% block content %}
   <h2>Login</h2>
   <p>You must login as teacher or student to see that page.</p>
-  <form method="post">
+  <form action="{% url 'home:login' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit">Login</button>
