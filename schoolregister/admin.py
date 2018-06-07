@@ -9,7 +9,7 @@ admin.site.register([Grade, Lesson, Note, Presence, Rate, Subject, Taught])
 
 
 class StudentAdmin(admin.ModelAdmin):
-    list_display = ('get_full_name', 'group', 'email')
+    list_display = ('full_name', 'group', 'email')
     list_filter = ('group',)
 
 

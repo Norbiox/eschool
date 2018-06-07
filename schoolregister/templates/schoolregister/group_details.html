@@ -1,20 +1,28 @@
 {% extends "schoolregister/base.html" %}
 
-{% block title %}Class {{group.abbrev}}{% endblock %}
+{% block title %}Schoolregister:class {{ group.abbrev }}{% endblock %}
 
 {% block content %}
 <h2>Class {{ group.abbrev }}</h2>
 <p>Supervisor: {{ group.supervisor }}</p>
-<details>
-    <summary>
-        Students:
-    </summary>
-    <ol>
-        {% for student in group.student_set.all %}
-        <li><a href="{% url 'schoolregister:student_details' student.pk %}">{{ student }}</a></li>
-        {% endfor %}
-    </ol>
-</details>
+{% endblock %}
+
+{% block left-column %}
+    <h3>Students list</h3>
+    <ul class="list">
+      {% for student in group.student_set.all %}
+        {% if forloop.first %}
+        <li class="first"><a href="{% url 'schoolregister:student_details' student.id %}">{{ student.first_name }} {{ student.last_name }}</a></li>
+        {% elif forloop.last %}
+        <li class="lasr"><a href="{% url 'schoolregister:student_details' student.id %}">{{ student.first_name }} {{ student.last_name }}</a></li>
+        {% else %}
+        <li><a href="{% url 'schoolregister:student_details' student.id %}">{{ student.first_name }} {{ student.last_name }}</a></li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+{% endblock %}
+
+{% block right-column %}
 <details>
     <summary>
         Subjects:

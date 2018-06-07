@@ -64,7 +64,7 @@ class Teacher(models.Model):
         return self.user.first_name
 
     def last_name(self):
-        return self.user.second_name
+        return self.user.last_name
 
 
 class Group(models.Model):
@@ -119,7 +119,7 @@ class Student(models.Model):
     def __repr__(self):
         return ' '.join([Student, self.user.first_name, self.user.last_name, ',', self.group])
 
-    def get_full_name(self):
+    def full_name(self):
         return ' '.join([self.user.first_name, self.user.last_name])
         name.short_description = 'Student'
 
@@ -130,7 +130,7 @@ class Student(models.Model):
         return self.user.first_name
 
     def last_name(self):
-        return self.user.second_name
+        return self.user.last_name
 
 
 class Rate(models.Model):
