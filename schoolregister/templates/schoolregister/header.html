@@ -1,14 +1,26 @@
 {% block header %}
 <header>
-    <div id="logo">
-        <h1><a href="#">School register</a></h1>
-    </div>
-    <div id="search">
-        <form action="" method="post">
-            <div>
-                <input class="form-text" name="search" size="32" maxlength="64" /><input class="form-submit" type="submit" value="Search" />
-            </div>
-        </form>
-    </div>
+
+  <div id="logo">
+    <h1><a href="{% url 'home:index' %}">eSchool</a></h1>
+  </div>
+
+  <div id="user-panel">
+    {% if user.is_authenticated %}
+      <p>welcome, {{ user.first_name }}</p>
+
+      {% if user.is_teacher %}
+        <a class="button" href="{% url 'schoolregister:teacher_details' user.teacher.id %}">My Profile</a>
+      {% else %}
+        <a class="button" href="{% url 'schoolregister:student_details' user.stuent.id %}">My Profile</a>
+      {% endif %}
+
+      <a class="button" href="{% url 'home:logout' %}">Logout</a>
+
+    {% else %}
+      <a class="button" href="{% url 'home:login' %}">Login</a>
+    {% endif %}
+      <br class="clearfix" />
+  </div>
 </header>
 {% endblock %}

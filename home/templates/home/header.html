@@ -5,8 +5,8 @@
     </div>
     <div id="user-panel">
         {% if user.is_authenticated %}
-        <p>welcome, {{ user.first_name }} {{ user.second_name }}</p>
-        <a class="button" href="/profile">My Profile</a>
+        <p>welcome, {{ user.first_name }}</p>
+        <a class="button" href="{% url 'home:profile' user.id %}">My Profile</a>
         <a class="button" href="{% url 'home:logout' %}">Logout</a>
         {% else %}
         <a class="button" href="{% url 'home:login' %}">Login</a>

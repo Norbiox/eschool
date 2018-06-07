@@ -44,9 +44,9 @@ class GroupsView(DetailView):
 class IndexView(View):
     template_name = 'schoolregister/index.html'
 
-    def get(self, request):
-        context = { 'welcome': "Yo mon! You're in school register index!"}
-        return render(request, self.template_name, context)
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        return render(request, self.template_name, {'user':user})
 
 
 @method_decorator(student_or_teacher_required, name='dispatch')

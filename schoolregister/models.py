@@ -39,7 +39,7 @@ class Teacher(models.Model):
     title = models.CharField(max_length=20, choices=TITLES, default=NONE, \
         null=True, blank=True
     )
-    specialisation = models.ForeignKey(Subject, on_delete=models.CASCADE, \
+    specialization = models.ForeignKey(Subject, on_delete=models.CASCADE, \
         null=True, blank=True
     )
     birth_date = models.DateField()

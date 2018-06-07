@@ -9,4 +9,5 @@ urlpatterns = [
     path('', views.IndexView.as_view(), name='index'),
     re_path(r'^login/$', auth_views.login, {'template_name': 'home/login.html'}, name='login'),
     re_path(r'^logout/$', auth_views.logout, {'next_page': '/'}, name='logout'),
+    path('<int:pk>/profile/', views.ProfileView.as_view(), name='profile'),
 ]

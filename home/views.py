@@ -24,3 +24,8 @@ class IndexView(View):
     def get(self, request):
         context = { 'welcome': "Yo mon! You're at our school homepage!"}
         return render(request, self.template_name, context)
+
+
+class ProfileView(DetailView):
+    model = User
+    template_name = 'home/profile.html'

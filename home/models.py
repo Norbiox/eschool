@@ -13,3 +13,6 @@ class User(AbstractUser):
     is_student = m.BooleanField('student status', default=False)
     is_teacher = m.BooleanField('teacher status', default=False)
     is_writer = m.BooleanField('teacher status', default=False)
+
+    def full_name(self):
+        return ' '.join([self.first_name, self.last_name])

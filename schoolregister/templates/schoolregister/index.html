@@ -1,5 +1,10 @@
-{% extends "schoolregister/base.html" %}
+{% extends 'schoolregister/base.html' %}
+
+{% block title %}Schoolregister:Welcome{% endblock %}
 
 {% block content %}
-{{ welcome }}
+<h2>Hello, {{ user.full_name }}</h2>
+<p>
+    You're on schoolregister index page.
+</p>
 {% endblock %}
