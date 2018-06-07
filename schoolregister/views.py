@@ -35,9 +35,16 @@ class GroupsList(ListView):
 
 
 @method_decorator(student_or_teacher_required, name='dispatch')
-class GroupsView(DetailView):
-    model = Group
-    template_name = 'schoolregister/groups_html'
+class GroupView(View):
+    template_name = 'schoolregister/group_details.html'
+
+    def get(self, request, *args, **kwargs):
+        group_abbrev = kwargs['abbrev']
+        for group in Group.objects.all():
+            print(group.abbrev)
+            if group.abbrev == group_abbrev:
+                return render(request, self.template_name, {'group':group})
+        raise Http404
 
 
 @method_decorator(student_or_teacher_required, name='dispatch')

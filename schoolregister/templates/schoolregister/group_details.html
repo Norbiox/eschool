@@ -1,11 +1,13 @@
-{% load static %}
-<link rel="stylesheet" type="text/css" href="{% static 'schoolregister/style.css' %}" />
+{% extends "schoolregister/base.html" %}
 
-<h2>Klasa {{ group.abbrev }}</h2>
-<p>Opiekun: {{ group.supervisor }}</p>
+{% block title %}Class {{group.abbrev}}{% endblock %}
+
+{% block content %}
+<h2>Class {{ group.abbrev }}</h2>
+<p>Supervisor: {{ group.supervisor }}</p>
 <details>
     <summary>
-        Uczniowie:
+        Students:
     </summary>
     <ol>
         {% for student in group.student_set.all %}
@@ -15,7 +17,7 @@
 </details>
 <details>
     <summary>
-        Przedmioty:
+        Subjects:
     </summary>
     <ol>
         {% for taught in group.taught_set.all %}
@@ -25,3 +27,4 @@
         {% endfor %}
     </ol>
 </details>
+{% endblock %}
