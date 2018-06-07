@@ -1,0 +1,19 @@
+{% block group_minimenu %}
+
+{% if user.is_teacher %}
+  <div class="minimenu">
+    <div class="minimenu_item">
+      item1
+    </div>
+    <div class="minimenu_item">
+      item2
+    </div>
+    <div class="minimenu_item">
+      item3
+    </div>
+  </div>
+{% else %}
+
+{% endif %}
+
+{% endblock %}

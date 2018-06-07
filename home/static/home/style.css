@@ -180,6 +180,8 @@ section ul {
 section ul li {
 	border-top: solid 1px #B8B8B8;
 	padding: 15px 0 15px 0;
+	display: flex;
+	height: 1.4em;
 }
 
 section ul li.first {
@@ -205,6 +207,15 @@ ul h4 {
 
 .content {
 	margin: 0 0 40px 0;
+}
+
+.minimenu {
+	display: flex;
+	margin-left: auto;
+}
+
+.minimenu_item {
+	margin: 0px 5px;
 }
 
 #content {

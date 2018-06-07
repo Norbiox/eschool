@@ -10,13 +10,13 @@
 {% block left-column %}
     <h3>Students list</h3>
     <ul class="list">
-      {% for student in group.student_set.all %}
+      {% for student in group.students %}
         {% if forloop.first %}
-        <li class="first"><a href="{% url 'schoolregister:student_details' student.id %}">{{ student.first_name }} {{ student.last_name }}</a></li>
+        <li class="first"><a href="{% url 'schoolregister:student_details' student.id %}">{{ forloop.counter }}. {{ student.last_name }} {{ student.first_name }}</a></li>
         {% elif forloop.last %}
-        <li class="lasr"><a href="{% url 'schoolregister:student_details' student.id %}">{{ student.first_name }} {{ student.last_name }}</a></li>
+        <li class="lasr"><a href="{% url 'schoolregister:student_details' student.id %}">{{ forloop.counter }}. {{ student.last_name }} {{ student.first_name }}</a></li>
         {% else %}
-        <li><a href="{% url 'schoolregister:student_details' student.id %}">{{ student.first_name }} {{ student.last_name }}</a></li>
+        <li><a href="{% url 'schoolregister:student_details' student.id %}">{{ forloop.counter }}. {{ student.last_name }} {{ student.first_name }}</a></li>
         {% endif %}
       {% endfor %}
     </ul>

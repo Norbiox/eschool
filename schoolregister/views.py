@@ -31,7 +31,7 @@ class GroupsList(ListView):
     context_object_name = 'groups'
 
     def get_queryset(self):
-        return Group.objects.order_by('-year')[::-1]
+        return Group.objects.order_by('-year','-letter')[::-1]
 
 
 @method_decorator(student_or_teacher_required, name='dispatch')
@@ -43,7 +43,8 @@ class GroupView(View):
         for group in Group.objects.all():
             print(group.abbrev)
             if group.abbrev == group_abbrev:
-                return render(request, self.template_name, {'group':group})
+                context = {'group':group}
+                return render(request, self.template_name, context)
         raise Http404
 
 

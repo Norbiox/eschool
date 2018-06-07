@@ -10,7 +10,9 @@
     {% for group in groups %}
         <li>
           <a href="{% url 'schoolregister:group_details' group.abbrev %}">{{ group.abbrev }}</a>
+          <p>&nbsp</p>
           <a href="{% url 'schoolregister:teacher_details' group.supervisor.id %}">{{ group.supervisor }}</a>
+          {% include 'schoolregister/group_minimenu.html' %}
         </li>
     {% endfor %}
     </ul>

@@ -90,6 +90,9 @@ class Group(models.Model):
     def number_of_students(self):
         return len(list(filter(lambda s: s.group == self, Student.objects.all())))
 
+    def students(self):
+        students_list = list(filter(lambda s: s.group == self, Student.objects.all()))
+        return sorted(students_list, key=lambda s: s.user.last_name)
 
 class Taught(models.Model):
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
