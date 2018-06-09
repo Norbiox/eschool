@@ -1,0 +1,14 @@
+{% extends "schoolregister/base.html" %}
+
+{% block title %}Schoolregister:Subject {{ taught.group.abbrev }}{% endblock %}
+
+{% block content %}
+<h2>{{ taught.subject }} in class {{ taught.group.abbrev }}</h2>
+<p>Teacher: <a href="{% url 'schoolregister:teacher_details'  taught.teacher.id %}">{{ taught.teacher.full_name }}</a></p>
+
+{% if user.is_teacher %}
+  {% with students=taught.group.students %}
+    {% include 'schoolregister/students.html' %}
+  {% endwith %}
+{% endif %}
+{% endblock %}

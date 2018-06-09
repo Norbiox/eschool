@@ -1,8 +1,20 @@
-{% block groups %}
-  <h3>Classes</h3>
-{% if groups %}
+{% extends 'schoolregister/base.html' %}
+
+{% block title %}Schoolregister:classes{% endblock %}
+
+{% block content %}
+
+{% if myclass %}
+  <h3>My class</h3>
+  <ul>
+    <a href="{% url 'schoolregister:group_details' group.abbrev %}">{{ group.abbrev }}</a>
+  </ul>
+{% endif %}
+
+{% if teaching_in_classes %}
+  <h3>I teach in</h3>
     <ul>
-    {% for group in groups %}
+    {% for group in teaching_in_classes %}
         <li>
           <a href="{% url 'schoolregister:group_details' group.abbrev %}">{{ group.abbrev }}</a>
           <p>&nbsp supervisor: </p>
@@ -11,8 +23,19 @@
         </li>
     {% endfor %}
     </ul>
-{% else %}
-    <p>There are no groups.</p>
+{% endif %}
+
+{% if other_classes %}
+  <h3>Other classes</h3>
+  <ul>
+  {% for group in other_classes %}
+      <li>
+        <a href="{% url 'schoolregister:group_details' group.abbrev %}">{{ group.abbrev }}</a>
+        <p>&nbsp supervisor: </p>
+        <a href="{% url 'schoolregister:teacher_details' group.supervisor.id %}">{{ group.supervisor }}</a>
+      </li>
+  {% endfor %}
+  </ul>
 {% endif %}
 
 {% endblock %}

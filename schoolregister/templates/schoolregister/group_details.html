@@ -4,7 +4,7 @@
 
 {% block content %}
 <h2>Class {{ group.abbrev }}</h2>
-<p>Supervisor: {{ group.supervisor }}</p>
+<p>Supervisor: <a href="{% url 'schoolregister:teacher_details'  group.supervisor.id %}">{{ group.supervisor }}</a></p>
 {% endblock %}
 
 {% block left-column %}

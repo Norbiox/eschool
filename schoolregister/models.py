@@ -53,6 +53,9 @@ class Teacher(models.Model):
     def __repr__(self):
         return ' '.join(['Teacher', self.user.first_name, self.user.last_name])
 
+    def __eq__(self, other):
+        return self.id == other.id
+
     def full_name(self):
         title = self.title if self.title is not None else ''
         return ' '.join([title, self.user.first_name, self.user.last_name])
@@ -83,6 +86,9 @@ class Group(models.Model):
     def __repr__(self):
         return ' '.join(['Group', self.abbrev])
 
+    def __eq__(self, other):
+        return self.id == other.id
+
     def name(self):
         return ' '.join(['Group', self.abbrev])
         name.short_description = 'Group name'
@@ -105,6 +111,8 @@ class Taught(models.Model):
     def __repr__(self):
         return ' '.join([self.subject, 'in', self.group])
 
+    def __eq__(self, other):
+        return self.id == other.id
 
 class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -121,6 +129,9 @@ class Student(models.Model):
 
     def __repr__(self):
         return ' '.join([Student, self.user.first_name, self.user.last_name, ',', self.group])
+
+    def __eq__(self, other):
+        return self.id == other.id
 
     def full_name(self):
         return ' '.join([self.user.first_name, self.user.last_name])

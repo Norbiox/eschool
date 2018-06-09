@@ -218,6 +218,15 @@ ul h4 {
 	margin: 0px 5px;
 }
 
+.student_grades {
+	display: flex;
+	margin-left: auto;
+}
+
+.student_grades_item {
+	margin: 0px 5px;
+}
+
 #content {
 	background: #FFF;
 	width: 700px;

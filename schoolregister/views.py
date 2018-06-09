@@ -25,16 +25,31 @@ class GradeView(DetailView):
     template_name = 'schoolregister/grade_detail.html'
 
 
-@method_decorator(student_or_teacher_required, name='dispatch')
+@method_decorator(teacher_required, name='dispatch')
 class GroupsList(ListView):
     template_name = 'schoolregister/groups.html'
-    context_object_name = 'groups'
 
-    def get_queryset(self):
-        return Group.objects.order_by('-year','-letter')[::-1]
+    def get(self, request, *args, **kwargs):
+        teacher = request.user.teacher
+        context = { 'myclass': [],
+                    'teaching_in_classes': [],
+                    'other_classes': []
+                }
+        for group in Group.objects.all():
+            if group.supervisor == teacher:
+                context['myclass'].append(group)
+            is_teaching_in = bool(list(filter(
+                lambda s: s.teacher == teacher,
+                group.taught_set.all()
+            )))
+            if is_teaching_in:
+                context['teaching_in_classes'].append(group)
+            else:
+                context['other_classes'].append(group)
+        return render(request, self.template_name, context)
 
 
-@method_decorator(student_or_teacher_required, name='dispatch')
+@method_decorator(teacher_required, name='dispatch')
 class GroupView(View):
     template_name = 'schoolregister/group_details.html'
 
@@ -42,11 +57,10 @@ class GroupView(View):
         group_abbrev = kwargs['abbrev']
         for group in Group.objects.all():
             print(group.abbrev)
-            if group.abbrev == group_abbrev:
+            if group == group:
                 context = {'group':group}
                 context['students'] = group.students
-                context['subjects'] = filter(lambda t: t.group.abbrev == group.abbrev, \
-                    Taught.objects.all())
+                context['taughts'] = group.taught_set.all()
                 return render(request, self.template_name, context)
         raise Http404
 
@@ -64,6 +78,12 @@ class IndexView(View):
 class StudentView(DetailView):
     model = Student
     template_name = 'schoolregister/student_details.html'
+
+
+@method_decorator(student_or_teacher_required, name='dispatch')
+class TaughtView(DetailView):
+    model = Taught
+    template_name = 'schoolregister/taught_details.html'
 
 
 @method_decorator(student_or_teacher_required, name='dispatch')

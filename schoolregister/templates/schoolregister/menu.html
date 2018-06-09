@@ -1,0 +1,27 @@
+{% block nav %}
+
+{% if user.is_teacher %}
+<nav>
+    <ul>
+        <li><a href="{% url 'home:index' %}">Home</a></li>
+        <li><a href="{% url 'schoolregister:index' %}">Main Page</a></li>
+        <li><a href="{% url 'schoolregister:groups' %}">Classes</a></li>
+        <li><a href="#">Lessons</a></li>
+    </ul>
+    <br class="clearfix" />
+</nav>
+{% else %}
+<nav>
+    <ul>
+        <li><a href="{% url 'home:index' %}">Home</a></li>
+        <li><a href="{% url 'schoolregister:index' %}">Main Page</a></li>
+        <li><a href="#">Subjects</a></li>
+        <li><a href="#">Grades</a></li>
+        <li><a href="#">Attendance</a></li>
+        <li><a href="#">Notes</a></li>
+    </ul>
+    <br class="clearfix" />
+</nav>
+{% endif %}
+
+{% endblock %}
