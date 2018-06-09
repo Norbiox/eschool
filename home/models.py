@@ -10,6 +10,10 @@ from django.db import models as m
 
 
 class User(AbstractUser):
+
+    class Meta:
+        ordering = ['last_name']
+
     is_student = m.BooleanField('student status', default=False)
     is_teacher = m.BooleanField('teacher status', default=False)
     is_writer = m.BooleanField('teacher status', default=False)

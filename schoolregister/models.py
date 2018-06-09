@@ -94,6 +94,7 @@ class Group(models.Model):
         students_list = list(filter(lambda s: s.group == self, Student.objects.all()))
         return sorted(students_list, key=lambda s: s.user.last_name)
 
+
 class Taught(models.Model):
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
@@ -104,6 +105,7 @@ class Taught(models.Model):
 
     def __repr__(self):
         return ' '.join([self.subject, 'in', self.group])
+
 
 class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -155,11 +157,15 @@ class Grade(models.Model):
     description = models.CharField(max_length=200, default='', null=True, blank=True)
     datetime = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        ordering = ['datetime']
+        get_latest_by = ['datetime']
+
     def __str__(self):
-        return ' : '.join([str(self.subject), self.get_mark_display()])
+        return str(self.student) + ' ' + str(self.student.group) + ' : ' + str(self.rate)
 
     def __repr__(self):
-        return ' : '.join([str(self.subject), self.get_mark_display()])
+        return str(self.student) + ' ' + str(self.student.group) + ' : ' + str(self.rate)
 
 
 class Lesson(models.Model):

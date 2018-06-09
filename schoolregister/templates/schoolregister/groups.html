@@ -4,44 +4,75 @@
 
 {% block content %}
 
-{% if myclass %}
-  <h3>My class</h3>
-  <ul>
-    <a href="{% url 'schoolregister:group_details' myclass.abbrev %}">{{ myclass.abbrev }}</a>
-  </ul>
-{% endif %}
+{% if user.is_teacher %}
 
-{% if teaching_in_classes %}
-  <h3>I teach in</h3>
+  {% if myclass %}
+    <h3>My class</h3>
     <ul>
-    {% for group in teaching_in_classes %}
+      <li>
+        <a href="{% url 'schoolregister:group_details' myclass.abbrev %}">{{ myclass.abbrev }}</a>
+        {% include 'schoolregister/group_minimenu.html' %}
+      </li>
+    </ul>
+  {% endif %}
+
+  {% if teaching_in_classes %}
+    <h3>I teach in</h3>
+      <ul>
+      {% for group in teaching_in_classes %}
+          <li>
+            <a href="{% url 'schoolregister:group_details' group.abbrev %}">{{ group.abbrev }}</a>
+            <p>&nbsp supervisor: </p>
+            <a href="{% url 'schoolregister:teacher_details' group.supervisor.id %}">{{ group.supervisor }}</a>
+            <p>&nbsp subject: </p>
+            {% for taught in group.taught_set.all %}
+              {% if taught.teacher == user.teacher %}
+                <a href="{% url 'schoolregister:taught_details' taught.id %}">{{ taught.subject }}</a>
+              {% endif %}
+            {% endfor %}
+            {% include 'schoolregister/group_minimenu.html' %}
+          </li>
+      {% endfor %}
+      </ul>
+  {% endif %}
+
+  {% if other_classes %}
+    <h3>Other classes</h3>
+    <ul>
+    {% for group in other_classes %}
         <li>
           <a href="{% url 'schoolregister:group_details' group.abbrev %}">{{ group.abbrev }}</a>
           <p>&nbsp supervisor: </p>
           <a href="{% url 'schoolregister:teacher_details' group.supervisor.id %}">{{ group.supervisor }}</a>
-          <p>&nbsp subject: </p>
-          {% for taught in group.taught_set.all %}
-            {% if taught.teacher == user.teacher %}
-              <a href="{% url 'schoolregister:taught_details' taught.id %}">{{ taught.subject }}</a>
-            {% endif %}
-          {% endfor %}
-          {% include 'schoolregister/group_minimenu.html' %}
         </li>
     {% endfor %}
     </ul>
-{% endif %}
+  {% endif %}
 
-{% if other_classes %}
-  <h3>Other classes</h3>
-  <ul>
-  {% for group in other_classes %}
+{% elif user.is_student %}
+
+  {% if myclass %}
+    <h3>My class</h3>
+    <ul>
       <li>
-        <a href="{% url 'schoolregister:group_details' group.abbrev %}">{{ group.abbrev }}</a>
-        <p>&nbsp supervisor: </p>
-        <a href="{% url 'schoolregister:teacher_details' group.supervisor.id %}">{{ group.supervisor }}</a>
+        <a href="{% url 'schoolregister:group_details' myclass.abbrev %}">{{ myclass.abbrev }}</a>
       </li>
-  {% endfor %}
-  </ul>
+    </ul>
+  {% endif %}
+
+  {% if other_classes %}
+    <h3>Other classes</h3>
+    <ul>
+    {% for group in other_classes %}
+        <li>
+          <a href="{% url 'schoolregister:group_details' group.abbrev %}">{{ group.abbrev }}</a>
+          <p>&nbsp supervisor: </p>
+          <a href="{% url 'schoolregister:teacher_details' group.supervisor.id %}">{{ group.supervisor }}</a>
+        </li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+
 {% endif %}
 
 {% endblock %}

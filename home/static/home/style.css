@@ -9,6 +9,11 @@ Version    : 1.0
 Released   : 20120710
 */
 
+:root {
+	--green-color: #73E34D;
+	--red-color: #EB4444;
+}
+
 * {
 	padding: 0;
 	margin: 0;

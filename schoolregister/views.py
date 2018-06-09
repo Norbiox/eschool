@@ -22,34 +22,43 @@ from .decorators import *
 @method_decorator(student_or_teacher_required, name='dispatch')
 class GradeView(DetailView):
     model = Grade
-    template_name = 'schoolregister/grade_detail.html'
+    template_name = 'schoolregister/grade_details.html'
 
 
-@method_decorator(teacher_required, name='dispatch')
-class GroupsList(ListView):
+@method_decorator(student_or_teacher_required, name='dispatch')
+class GroupsList(View):
     template_name = 'schoolregister/groups.html'
 
     def get(self, request, *args, **kwargs):
-        teacher = request.user.teacher
-        context = { 'myclass': None,
-                    'teaching_in_classes': [],
-                    'other_classes': []
-                }
-        for group in Group.objects.all():
-            if group.supervisor == teacher:
-                context['myclass'] = group
-            is_teaching_in = bool(list(filter(
-                lambda s: s.teacher == teacher,
-                group.taught_set.all()
-            )))
-            if is_teaching_in:
-                context['teaching_in_classes'].append(group)
-            else:
-                context['other_classes'].append(group)
+        if request.user.is_teacher:
+            teacher = request.user.teacher
+            context = { 'myclass': None,
+                        'teaching_in_classes': [],
+                        'other_classes': []
+                    }
+            for group in Group.objects.all():
+                is_teaching_in = bool(list(filter(
+                    lambda s: s.teacher == teacher,
+                    group.taught_set.all()
+                )))
+                if group.supervisor == teacher:
+                    context['myclass'] = group
+                elif is_teaching_in:
+                    context['teaching_in_classes'].append(group)
+                else:
+                    context['other_classes'].append(group)
+        else:
+            student = request.user.student
+            context = { 'myclass': None, 'other_classes': []}
+            for group in Group.objects.all():
+                if group == student.group:
+                    context['myclass'] = group
+                else:
+                    context['other_classes'].append(group)
         return render(request, self.template_name, context)
 
 
-@method_decorator(teacher_required, name='dispatch')
+@method_decorator(student_or_teacher_required, name='dispatch')
 class GroupView(View):
     template_name = 'schoolregister/group_details.html'
 

@@ -3,9 +3,8 @@
   {% for grade in student.grade_set.all %}
     {% if grade.subject == taught %}
       <div class="student_grades_item">
-        <a href="{% url 'schoolregister:grade_details' grade.id %}"
-          onmouseover="Subject: %s\nweight: %s\nDatetime: %s" % {{ grade.subject }}{{ grade.weight }}{{ grad.datetime }}>
-          {{ grade }}
+        <a href="{% url 'schoolregister:grade_details' grade.id %}">
+          {{ grade.rate }}
         </a>
       </div>
       {% endif %}
