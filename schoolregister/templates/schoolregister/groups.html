@@ -7,7 +7,7 @@
 {% if myclass %}
   <h3>My class</h3>
   <ul>
-    <a href="{% url 'schoolregister:group_details' group.abbrev %}">{{ group.abbrev }}</a>
+    <a href="{% url 'schoolregister:group_details' myclass.abbrev %}">{{ myclass.abbrev }}</a>
   </ul>
 {% endif %}
 
@@ -19,6 +19,12 @@
           <a href="{% url 'schoolregister:group_details' group.abbrev %}">{{ group.abbrev }}</a>
           <p>&nbsp supervisor: </p>
           <a href="{% url 'schoolregister:teacher_details' group.supervisor.id %}">{{ group.supervisor }}</a>
+          <p>&nbsp subject: </p>
+          {% for taught in group.taught_set.all %}
+            {% if taught.teacher == user.teacher %}
+              <a href="{% url 'schoolregister:taught_details' taught.id %}">{{ taught.subject }}</a>
+            {% endif %}
+          {% endfor %}
           {% include 'schoolregister/group_minimenu.html' %}
         </li>
     {% endfor %}

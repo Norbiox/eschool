@@ -1,0 +1,10 @@
+{% extends "schoolregister/base.html" %}
+
+{% block content %}
+<h2>{{ grade }}</h2>
+<h4>{{ grade.student }}</h4>
+<h4>{{ grade.subject }}</h4>
+<h5>{{ grade.description }}</h5>
+<p>{{ grade.given_by.full_name }}</p>
+<p>{{ grade.datetime }}</p>
+{% endblock %}

@@ -31,13 +31,13 @@ class GroupsList(ListView):
 
     def get(self, request, *args, **kwargs):
         teacher = request.user.teacher
-        context = { 'myclass': [],
+        context = { 'myclass': None,
                     'teaching_in_classes': [],
                     'other_classes': []
                 }
         for group in Group.objects.all():
             if group.supervisor == teacher:
-                context['myclass'].append(group)
+                context['myclass'] = group
             is_teaching_in = bool(list(filter(
                 lambda s: s.teacher == teacher,
                 group.taught_set.all()
