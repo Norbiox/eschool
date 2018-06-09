@@ -1,5 +1,7 @@
 {% extends "schoolregister/base.html" %}
 
+{% block title %}Grade {{ grade }}{% endblock %}
+
 {% block content %}
 <h2>{{ grade.rate }} - {{ grade.rate.name }}</h2>
 <h4>{{ grade.student }}</h4>

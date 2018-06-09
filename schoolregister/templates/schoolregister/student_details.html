@@ -1,6 +1,5 @@
 {% extends "schoolregister/base.html" %}
 
 {% block content %}
-<h1>{{ student }}</h1>
-<h2>{{ student.group }}</h2>
+  {% include 'schoolregister/student_header.html' %}
 {% endblock %}

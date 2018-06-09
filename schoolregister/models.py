@@ -167,6 +167,9 @@ class Grade(models.Model):
     def __repr__(self):
         return str(self.student) + ' ' + str(self.student.group) + ' : ' + str(self.rate)
 
+    def get_absolute_url(self):
+        return reverse('schoolregister:grade_details', kwargs={'pk':self.pk})
+
 
 class Lesson(models.Model):
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)

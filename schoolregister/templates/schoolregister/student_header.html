@@ -1,0 +1,5 @@
+{% block student_header %}
+  <h2>{{ student.full_name }}</h2>
+  <h3>class: <a href="{% url 'schoolregister:group_details' student.group.id %}">{{ student.group }}</a></h3>
+  <p>email: <a href="mailto:{{ teacher.email }}">{{ student.email }}</a></p>
+{% endblock %}

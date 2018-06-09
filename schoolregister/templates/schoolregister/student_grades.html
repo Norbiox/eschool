@@ -1,13 +1,17 @@
-{% block student_grades %}
-<div class="student_grades">
-  {% for grade in student.grade_set.all %}
-    {% if grade.subject == taught %}
-      <div class="student_grades_item">
-        <a href="{% url 'schoolregister:grade_details' grade.id %}">
-          {{ grade.rate }}
-        </a>
-      </div>
-      {% endif %}
-  {% endfor %}
-</div>
+{% extends 'schoolregister/base.html' %}
+
+{% block title %}{{ student }} grades{% endblock %}
+
+{% block content %}
+  {% include 'schoolregister/student_header.html' %}
+  <ul>
+    {% for taught in student.group.taught_set.all %}
+      <li>
+        <a href="{% url 'schoolregister:taught_details' taught.id %}">{{ taught.subject }}</a>
+        <p>&nbsp teacher: </p>
+        <a href="{% url 'schoolregister:teacher_details' taught.teacher.id %}">{{ taught.teacher }}</a>
+        {% include 'schoolregister/student_grades_list.html' %}
+      </li>
+    {% endfor %}
+  </ul>
 {% endblock %}

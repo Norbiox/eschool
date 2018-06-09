@@ -4,7 +4,7 @@
     <ul>
     {% for taught in taughts %}
         <li>
-          <p>{{ taught }}</p>
+          <a href="{% url 'schoolregister:taught_details' taught.id %}">{{ taught }}</a>
           <p>&nbsp teacher: </p>
           <a href="{% url 'schoolregister:teacher_details' group.supervisor.id %}">{{ taught.teacher }}</a>
         </li>

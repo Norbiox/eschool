@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 from django.contrib.auth import REDIRECT_FIELD_NAME, login as auth_login, logout as auth_logout
-from django.http import HttpResponse, HttpResponseRedirect, Http404
+from django.http import HttpResponse, HttpResponseRedirect, Http404, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse
-from django.views import View
-from django.views.generic import DetailView, FormView, ListView, RedirectView
+from django.views import View, generic
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
@@ -20,9 +19,22 @@ from .decorators import *
 
 
 @method_decorator(student_or_teacher_required, name='dispatch')
-class GradeView(DetailView):
+class GradeView(generic.DetailView):
     model = Grade
     template_name = 'schoolregister/grade_details.html'
+
+
+@method_decorator(student_or_teacher_required, name='dispatch')
+class GradesView(View):
+    template_name = 'schoolregister/student_grades.html'
+
+    def get(self, request, *args, **kwargs):
+        student = Student.objects.get(id=kwargs['pk'])
+        if not request.user.is_teacher:
+            if request.user.student != student:
+                return HttpResponseForbidden("Forbidden.")
+        context = {'student':student}
+        return render(request, self.template_name, context)
 
 
 @method_decorator(student_or_teacher_required, name='dispatch')
@@ -64,14 +76,14 @@ class GroupView(View):
 
     def get(self, request, *args, **kwargs):
         group_abbrev = kwargs['abbrev']
-        for group in Group.objects.all():
-            print(group.abbrev)
-            if group == group:
-                context = {'group':group}
-                context['students'] = group.students
-                context['taughts'] = group.taught_set.all()
-                return render(request, self.template_name, context)
-        raise Http404
+        group = Group.objects.all().filter(year=int(group_abbrev[0])).filter(letter=group_abbrev[1])[0]
+        if not group:
+            raise Http404
+        if group:
+            context = {'group':group}
+            context['students'] = group.student_set.all()
+            context['taughts'] = group.taught_set.all()
+            return render(request, self.template_name, context)
 
 
 @method_decorator(student_or_teacher_required, name='dispatch')
@@ -84,19 +96,19 @@ class IndexView(View):
 
 
 @method_decorator(student_or_teacher_required, name='dispatch')
-class StudentView(DetailView):
+class StudentView(generic.DetailView):
     model = Student
     template_name = 'schoolregister/student_details.html'
 
 
 @method_decorator(student_or_teacher_required, name='dispatch')
-class TaughtView(DetailView):
+class TaughtView(generic.DetailView):
     model = Taught
     template_name = 'schoolregister/taught_details.html'
 
 
 @method_decorator(student_or_teacher_required, name='dispatch')
-class TeacherView(DetailView):
+class TeacherView(generic.DetailView):
     model = Teacher
     template_name = 'schoolregister/teacher_details.html'
 
