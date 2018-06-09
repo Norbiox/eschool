@@ -1,16 +1,11 @@
-{% extends 'schoolregister/base.html' %}
-
-{% block title %}Schoolregister:classes{% endblock %}
-
-{% block content %}
-
+{% block groups %}
+  <h3>Classes</h3>
 {% if groups %}
-  <h2>Classes</h2>
     <ul>
     {% for group in groups %}
         <li>
           <a href="{% url 'schoolregister:group_details' group.abbrev %}">{{ group.abbrev }}</a>
-          <p>&nbsp</p>
+          <p>&nbsp supervisor: </p>
           <a href="{% url 'schoolregister:teacher_details' group.supervisor.id %}">{{ group.supervisor }}</a>
           {% include 'schoolregister/group_minimenu.html' %}
         </li>

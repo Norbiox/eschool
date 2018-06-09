@@ -26,15 +26,8 @@ class GroupAdmin(admin.ModelAdmin):
 
 admin.site.register(Group, GroupAdmin)
 
-"""
-class TeacherAdmin(admin.ModelAdmin):
-    fieldsets = [
-        ('Personal info',   {'fields': ['first_name', 'last_name', 'title', \
-                                        'birth_date']}),
-        ('Contact info',    {'fields': ['email', 'address', 'phone']}),
-        ('School info',     {'fields': ['specialisation']})
-    ]
-    list_display = ('full_name', 'email', 'group')
-"""
 
-admin.site.register(Teacher)
+class TeacherAdmin(admin.ModelAdmin):
+    list_display = ('full_name', 'email', 'specialization', 'group')
+
+admin.site.register(Teacher, TeacherAdmin)

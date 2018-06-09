@@ -44,6 +44,9 @@ class GroupView(View):
             print(group.abbrev)
             if group.abbrev == group_abbrev:
                 context = {'group':group}
+                context['students'] = group.students
+                context['subjects'] = filter(lambda t: t.group.abbrev == group.abbrev, \
+                    Taught.objects.all())
                 return render(request, self.template_name, context)
         raise Http404
 

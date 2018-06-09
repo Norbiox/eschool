@@ -1,0 +1,17 @@
+{% block subjects %}
+  <h3>Subjects</h3>
+{% if taughts %}
+    <ul>
+    {% for taught in taughts %}
+        <li>
+          <p>{{ taught }}</p>
+          <p>&nbsp teacher: </p>
+          <a href="{% url 'schoolregister:teacher_details' group.supervisor.id %}">{{ taught.teacher }}</a>
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>This class has no subjects yet.</p>
+{% endif %}
+
+{% endblock %}

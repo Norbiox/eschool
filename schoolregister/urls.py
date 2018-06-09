@@ -6,7 +6,7 @@ from . import views
 app_name = 'schoolregister'
 urlpatterns = [
     path('', views.IndexView.as_view(), name='index'),
-    # ex: /schoolregister/groups/
+    # ex: /schoolregister/my-classes
     path('groups/', views.GroupsList.as_view(), name='groups'),
     # ex: /schoolregister/group/1
     path('group/<str:abbrev>/', views.GroupView.as_view(), name='group_details'),

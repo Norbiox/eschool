@@ -1,0 +1,11 @@
+{% block students %}
+  <h3>Students list</h3>
+  <ul>
+    {% for student in students %}
+      <li>
+        <a href="{% url 'schoolregister:student_details' student.id %}">{{ forloop.counter }}. {{ student.last_name }} {{ student.first_name }}</a>
+        {% include 'schoolregister/student_minimenu.html' %}
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}

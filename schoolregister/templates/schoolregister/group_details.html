@@ -8,31 +8,9 @@
 {% endblock %}
 
 {% block left-column %}
-    <h3>Students list</h3>
-    <ul class="list">
-      {% for student in group.students %}
-        {% if forloop.first %}
-        <li class="first"><a href="{% url 'schoolregister:student_details' student.id %}">{{ forloop.counter }}. {{ student.last_name }} {{ student.first_name }}</a></li>
-        {% elif forloop.last %}
-        <li class="lasr"><a href="{% url 'schoolregister:student_details' student.id %}">{{ forloop.counter }}. {{ student.last_name }} {{ student.first_name }}</a></li>
-        {% else %}
-        <li><a href="{% url 'schoolregister:student_details' student.id %}">{{ forloop.counter }}. {{ student.last_name }} {{ student.first_name }}</a></li>
-        {% endif %}
-      {% endfor %}
-    </ul>
+  {% include 'schoolregister/students.html' %}
 {% endblock %}
 
 {% block right-column %}
-<details>
-    <summary>
-        Subjects:
-    </summary>
-    <ol>
-        {% for taught in group.taught_set.all %}
-        <li>
-            {{ taught.subject }}, prowadzący: <a href="{% url 'schoolregister:teacher_details' taught.teacher.pk %}">{{ taught.teacher }}</a>
-        </li>
-        {% endfor %}
-    </ol>
-</details>
+  {% include 'schoolregister/subjects.html' %}
 {% endblock %}
