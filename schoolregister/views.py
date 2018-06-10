@@ -14,6 +14,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
+from django.utils import timezone
 from django.utils.http import is_safe_url
 
 from .models import *
@@ -21,6 +22,24 @@ from .decorators import *
 from .forms import *
 
 logger = logging.getLogger(__name__)
+
+@method_decorator(teacher_required, name='dispatch')
+class GiveGradeView(View):
+    template_name = 'schoolregister/give_grade.html'
+    form_class = GiveGrade
+
+    def get(self, request, *args, **kwargs):
+        student = get_object_or_404(Student, pk=kwargs['pk'])
+        context = { 'form':self.form_class(),
+                    'student': student }
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        student = get_object_or_404(Student, pk=kwargs['pk'])
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            pass
+
 
 @method_decorator(student_or_teacher_required, name='dispatch')
 class GradeView(generic.DetailView):
@@ -135,13 +154,15 @@ class LessonView(View):
         if request.POST.get("submit"):
             present_student_ids = list(map(int,request.POST.getlist('present')))
             for presence in context['presences']:
-                print(presence.student.id, present_student_ids)
                 if presence.student.id in present_student_ids:
                     presence.state = True
                 else:
                     presence.state = False
                 presence.save()
-                logger.info("presence {} saved!".format(presence))
+        elif request.POST.get("end_lesson"):
+            context['lesson'].end_time = timezone.now()
+            context['lesson'].save()
+            logger.info("Lesson save with end_time {}".format(context['lesson'].end_time))
         return render(request, self.template_name, context)
 
 
@@ -163,7 +184,7 @@ class NotesView(View):
                 return HttpResponseForbidden("Forbidden.")
         context = {'student':student}
         context['notes'] = student.note_set.all().order_by('-datetime')
-        return render(request, self.template_name, context)
+
 
 
 @method_decorator(student_or_teacher_required, name='dispatch')

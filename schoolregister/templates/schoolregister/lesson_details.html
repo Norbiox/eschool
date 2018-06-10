@@ -10,6 +10,16 @@
   <h4>Topic: {{ lesson.topic }}</h4>
   <a href="{% url 'schoolregister:teacher_details' lesson.teacher.id %}"><h5>{{ lesson.teacher }}</h5></a>
   <h5>{{ lesson.start_time }}</h5>
+  {% if lesson.is_active and user.is_teacher %}
+  <div style="display:flex; width:100%">
+    <div style="margin-left:auto;">
+      <form action="" method="post">
+          {% csrf_token %}
+          <input class="end-lesson-button" type="submit" value="End lesson" name="end_lesson"/>
+      </form>
+    </div>
+  </div>
+  {% endif %}
 
 {% if user.is_teacher %}
   {% include 'schoolregister/_presence_list.html' %}

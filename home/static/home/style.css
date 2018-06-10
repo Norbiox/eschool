@@ -206,6 +206,15 @@ ul h4 {
 	margin-bottom: 0.4em;
 }
 
+.end-lesson-button {
+	font-size: 1.2em;
+}
+
+.give-grade-form {
+	display: inline-grid;
+	width: 40%;
+}
+
 .post {
 	margin: 0 0 40px 0;
 }
