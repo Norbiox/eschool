@@ -1,0 +1,15 @@
+{% block presence_checkbox %}
+{% if lesson.is_active and presence.state %}
+  <input name="present" value="{{ presence.student.id }}"
+    type="checkbox" checked>
+{% elif not lesson.is_active and presence.state %}
+  <input name="present" value="{{ presence.student.id }}"
+    type="checkbox" onclick="return false;" checked>
+{% elif not lesson.is_active and not presence.state %}
+  <input name="present" value="{{ presence.student.id }}"
+    type="checkbox" onclick="return false;">
+{% elif lesson.is_active and not presence.state %}
+  <input name="present" value="{{ presence.student.id }}"
+    type="checkbox">
+{% endif %}
+{% endblock %}

@@ -1,4 +1,4 @@
-{% extends "schoolregister/base.html" %}
+{% extends "schoolregister/__base.html" %}
 
 {% block title %}Subject {{ taught }}{% endblock %}
 
@@ -8,7 +8,7 @@
 
 {% if user.is_teacher %}
   {% with students=taught.group.students %}
-    {% include 'schoolregister/students.html' %}
+    {% include 'schoolregister/_students.html' %}
   {% endwith %}
 {% endif %}
 {% endblock %}

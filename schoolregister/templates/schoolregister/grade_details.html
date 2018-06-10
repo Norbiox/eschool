@@ -1,4 +1,4 @@
-{% extends "schoolregister/base.html" %}
+{% extends "schoolregister/__base.html" %}
 
 {% block title %}Grade {{ grade }}{% endblock %}
 
@@ -9,4 +9,10 @@
 <p>{{ grade.description }}</p>
 <h5>{{ grade.given_by.full_name }}</h5>
 <h5>{{ grade.datetime }}</h5>
+{% endblock %}
+
+{% block left-column %}
+{% endblock %}
+
+{% block right-column %}
 {% endblock %}

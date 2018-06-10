@@ -66,6 +66,13 @@ class Teacher(models.Model):
     def last_name(self):
         return self.user.last_name
 
+    def active_lesson(self):
+        lessons = Lesson.objects.filter(teacher=self)
+        active = list(filter(lambda l: l.is_active(), lessons))
+        if active:
+            return active[0]
+        return None
+
 
 class Group(models.Model):
     year = models.IntegerField(validators=[MinValueValidator(0),
@@ -88,11 +95,10 @@ class Group(models.Model):
         name.short_description = 'Group name'
 
     def number_of_students(self):
-        return len(list(filter(lambda s: s.group == self, Student.objects.all())))
+        return len(self.student_set.all())
 
-    def students(self):
-        students_list = list(filter(lambda s: s.group == self, Student.objects.all()))
-        return sorted(students_list, key=lambda s: s.user.last_name)
+    def students_number(self, student):
+        return list(self.student_set.all()).index(student) + 1
 
 
 class Taught(models.Model):
@@ -108,6 +114,10 @@ class Taught(models.Model):
 
 
 class Student(models.Model):
+
+    class Meta:
+        ordering = ['user']
+
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     group = models.ForeignKey(Group, on_delete=models.CASCADE, blank=True, \
     null=True
@@ -135,6 +145,17 @@ class Student(models.Model):
 
     def last_name(self):
         return self.user.last_name
+
+    def number_of(self):
+        """Number of student in group list"""
+        return self.group.students_number(self)
+
+    def active_lesson(self):
+        lessons = Lesson.objects.filter(taught__in=self.group.taught_set.all())
+        active = list(filter(lambda l: l.is_active(), lessons))
+        if active:
+            return active[0]
+        return None
 
 
 class Rate(models.Model):
@@ -172,16 +193,40 @@ class Grade(models.Model):
 
 
 class Lesson(models.Model):
-    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ['start_time']
+        get_latest_by = ['start_time']
+
+    taught = models.ForeignKey(Taught, on_delete=models.CASCADE)
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
     start_time = models.DateTimeField(auto_now=True)
-    end_time = models.DateTimeField(auto_now=True)
+    end_time = models.DateTimeField(null=True, blank=True)
     topic = models.CharField(max_length=200)
 
     def __str__(self):
-        return ' '.join([str(self.subject), str(self.date)])
+        return ' '.join([str(self.taught), str(self.start_time)])
 
     def __repr__(self):
-        return ' '.join(['Lesson', str(self.subject), str(self.date)])
+        return ' '.join(['Lesson', str(self.taught), str(self.start_time)])
+
+    def save(self, *args, **kwargs):
+        super(Lesson, self).save(*args, **kwargs) # Call the "real" save() method.
+        for student in self.taught.group.student_set.all():
+            if Presence.objects.filter(lesson=self).filter(student=student):
+                continue
+            Presence(lesson=self, student=student, state=True).save()
+
+    def is_active(self):
+        """Returns True if lesson has not been closed"""
+        if self.start_time and not self.end_time:
+            return True
+        return False
+
+    def number_of(self):
+        """Returns number of lesson from specific subject in specific class."""
+        previous_lessons = Lesson.objects.filter(taught=self.taught).filter(start_time__lt=self.start_time)
+        return len(previous_lessons) + 1
 
 
 class Note(models.Model):
@@ -192,16 +237,20 @@ class Note(models.Model):
     datetime = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return ' '.join([str(self.notes_card.student), self.text, str(self.datetime)])
+        return ' '.join([str(self.student), self.text])
 
     def __repr__(self):
-        return ' '.join([self.notes_card, self.text, str(self.datetime)])
+        return ' '.join([str(self.student), self.text])
 
 
 class Presence(models.Model):
+
+    class Meta:
+        ordering = ['student']
+
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     state = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.state
+        return str(self.state)

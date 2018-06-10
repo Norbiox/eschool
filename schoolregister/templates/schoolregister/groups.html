@@ -1,4 +1,4 @@
-{% extends 'schoolregister/base.html' %}
+{% extends 'schoolregister/__base.html' %}
 
 {% block title %}Classes{% endblock %}
 
@@ -11,7 +11,7 @@
     <ul>
       <li>
         <a href="{% url 'schoolregister:group_details' myclass.abbrev %}">{{ myclass.abbrev }}</a>
-        {% include 'schoolregister/group_minimenu.html' %}
+        {% include 'schoolregister/_group_minimenu.html' %}
       </li>
     </ul>
   {% endif %}
@@ -30,7 +30,7 @@
                 <a href="{% url 'schoolregister:taught_details' taught.id %}">{{ taught.subject }}</a>
               {% endif %}
             {% endfor %}
-            {% include 'schoolregister/group_minimenu.html' %}
+            {% include 'schoolregister/_group_minimenu.html' %}
           </li>
       {% endfor %}
       </ul>

@@ -1,4 +1,4 @@
-{% extends "schoolregister/base.html" %}
+{% extends "schoolregister/__base.html" %}
 
 {% block title %}class {{ group.abbrev }}{% endblock %}
 
@@ -8,9 +8,9 @@
 {% endblock %}
 
 {% block left-column %}
-  {% include 'schoolregister/students.html' %}
+  {% include 'schoolregister/_students.html' %}
 {% endblock %}
 
 {% block right-column %}
-  {% include 'schoolregister/subjects.html' %}
+  {% include 'schoolregister/_taughts.html' with taughts=group.taught_set.all %}
 {% endblock %}

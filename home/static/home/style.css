@@ -214,6 +214,11 @@ ul h4 {
 	margin: 0 0 40px 0;
 }
 
+.inline {
+	display: flex;
+	width: 100%;
+}
+
 .minimenu {
 	display: flex;
 	margin-left: auto;

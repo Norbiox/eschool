@@ -5,7 +5,7 @@ from .models import User
 from .models import *
 
 
-admin.site.register([Grade, Lesson, Note, Presence, Rate, Subject, Taught])
+admin.site.register([Grade, Note, Rate, Subject, Taught])
 
 
 class StudentAdmin(admin.ModelAdmin):
@@ -25,6 +25,18 @@ class GroupAdmin(admin.ModelAdmin):
     list_display = ('name', 'supervisor', 'number_of_students')
 
 admin.site.register(Group, GroupAdmin)
+
+
+class LessonAdmin(admin.ModelAdmin):
+    list_display = ('taught', 'number_of', 'teacher', 'start_time', 'end_time', 'is_active')
+
+admin.site.register(Lesson, LessonAdmin)
+
+
+class PresenceAdmin(admin.ModelAdmin):
+    list_display = ('lesson', 'student', 'state')
+
+admin.site.register(Presence, PresenceAdmin)
 
 
 class TeacherAdmin(admin.ModelAdmin):

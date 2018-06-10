@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import logging
+
 from django.contrib.auth import REDIRECT_FIELD_NAME, login as auth_login, logout as auth_logout
 from django.http import HttpResponse, HttpResponseRedirect, Http404, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
@@ -16,7 +18,9 @@ from django.utils.http import is_safe_url
 
 from .models import *
 from .decorators import *
+from .forms import *
 
+logger = logging.getLogger(__name__)
 
 @method_decorator(student_or_teacher_required, name='dispatch')
 class GradeView(generic.DetailView):
@@ -93,6 +97,73 @@ class IndexView(View):
     def get(self, request, *args, **kwargs):
         user = request.user
         return render(request, self.template_name, {'user':user})
+
+
+@method_decorator(teacher_required, name='dispatch')
+class LessonPortalView(View):
+    template_name = 'schoolregister/lesson_portal.html'
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_teacher:
+            teacher = request.user.teacher
+            context = { 'teacher':teacher,
+                        'active_lesson':teacher.active_lesson(),
+                        'taughts':teacher.taught_set.all() }
+        else:
+            student = request.user.student
+            context = { 'student':student,
+                        'active_lesson':student.active_lesson() }
+        print(context['active_lesson'])
+        return render(request, self.template_name, context)
+
+
+@method_decorator(student_or_teacher_required, name='dispatch')
+class LessonView(View):
+    template_name = 'schoolregister/lesson_details.html'
+
+    def get(self, request, *args, **kwargs):
+        context = {}
+        context['lesson'] = get_object_or_404(Lesson, pk=kwargs['pk'])
+        context['presences'] = context['lesson'].presence_set.all()
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = {}
+        context['lesson'] = get_object_or_404(Lesson, pk=kwargs['pk'])
+        context['presences'] = context['lesson'].presence_set.all()
+        logger.info("POST: {}".format(request.POST))
+        if request.POST.get("submit"):
+            present_student_ids = list(map(int,request.POST.getlist('present')))
+            for presence in context['presences']:
+                print(presence.student.id, present_student_ids)
+                if presence.student.id in present_student_ids:
+                    presence.state = True
+                else:
+                    presence.state = False
+                presence.save()
+                logger.info("presence {} saved!".format(presence))
+        return render(request, self.template_name, context)
+
+
+
+@method_decorator(student_or_teacher_required, name='dispatch')
+class NoteView(generic.DetailView):
+    model = Note
+    template_name = 'schoolregister/note_details.html'
+
+
+@method_decorator(student_or_teacher_required, name='dispatch')
+class NotesView(View):
+    template_name = 'schoolregister/student_notes.html'
+
+    def get(self, request, *args, **kwargs):
+        student = Student.objects.get(id=kwargs['pk'])
+        if not request.user.is_teacher:
+            if request.user.student != student:
+                return HttpResponseForbidden("Forbidden.")
+        context = {'student':student}
+        context['notes'] = student.note_set.all().order_by('-datetime')
+        return render(request, self.template_name, context)
 
 
 @method_decorator(student_or_teacher_required, name='dispatch')

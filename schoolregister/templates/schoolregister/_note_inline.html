@@ -1,0 +1,12 @@
+{% block note_inline %}
+  <div class="inline">
+    {% if note.positive %}
+      <a href="{% url 'schoolregister:note_details' note.id %}"><strong><p style="color: var(--green-color);">GOOD</p></strong></a>
+    {% else %}
+      <a href="{% url 'schoolregister:note_details' note.id %}"><strong><p style="color: var(--red-color);">BAD</p></strong></a>
+    {% endif %}
+    <p>&nbsp from: &nbsp</p>
+    <a href="{% url 'schoolregister:teacher_details' note.given_by.id %}">{{ note.given_by.full_name }}</a>
+    <h5 style="margin-left:auto;">{{ note.datetime }}</h5>
+  </div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "schoolregister/__base.html" %}
+
+{% block title %}My lessons{% endblock %}
+
+{% block content %}
+  {% if active_lesson %}
+    <h3>Active lesson: <a href="{% url 'schoolregister:lesson_details' active_lesson.id %}">{{ active_lesson.taught.group }} - {{ active_lesson.taught.subject }}</a></h3>
+  {% elif user.is_teacher %}
+    new lesson form
+  {% endif %}
+{% endblock %}
+
+{% block left-column %}
+  {% if user.is_teacher %}
+    {% include 'schoolregister/_taughts.html' %}
+  {% elif user.is_student %}
+    {% include 'schoolregister/_subjects.html' with taughts=student.group.taught_set.all %}
+  {% endif %}
+{% endblock %}
+
+{% block right-column %}
+{% endblock %}

@@ -1,16 +1,16 @@
-{% extends 'schoolregister/base.html' %}
+{% extends 'schoolregister/__base.html' %}
 
 {% block title %}{{ student }} grades{% endblock %}
 
 {% block content %}
-  {% include 'schoolregister/student_header.html' %}
+  {% include 'schoolregister/_student_header.html' %}
   <ul>
     {% for taught in student.group.taught_set.all %}
       <li>
         <a href="{% url 'schoolregister:taught_details' taught.id %}">{{ taught.subject }}</a>
         <p>&nbsp teacher: </p>
         <a href="{% url 'schoolregister:teacher_details' taught.teacher.id %}">{{ taught.teacher }}</a>
-        {% include 'schoolregister/student_grades_list.html' %}
+        {% include 'schoolregister/_student_grades_list.html' %}
       </li>
     {% endfor %}
   </ul>
