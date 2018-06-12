@@ -8,9 +8,11 @@
 {% endblock %}
 
 {% block left-column %}
+  <h4>Students</h4>
   {% include 'schoolregister/_students.html' %}
 {% endblock %}
 
 {% block right-column %}
+  <h4>Subjects</h4>
   {% include 'schoolregister/_taughts.html' with taughts=group.taught_set.all %}
 {% endblock %}

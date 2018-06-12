@@ -198,6 +198,13 @@ strong {
 	color: #000;
 }
 
+summary {
+	color: #000;
+	font-family: Satisfy, script;
+	margin-bottom: 0.5em;
+	font-size: 1.5em;
+}
+
 ul {
 	margin-bottom: 1.75em;
 }
@@ -210,9 +217,12 @@ ul h4 {
 	font-size: 1.2em;
 }
 
-.give-grade-form {
+.grade-form {
 	display: inline-grid;
-	width: 40%;
+}
+
+.note-form {
+	display: inline-grid;
 }
 
 .post {
@@ -237,12 +247,12 @@ ul h4 {
 	margin: 0px 5px;
 }
 
-.student_grades {
+.student_grades_inline {
 	display: flex;
 	margin-left: auto;
 }
 
-.student_grades_item {
+.student_grades_inline_item {
 	margin: 0px 5px;
 }
 

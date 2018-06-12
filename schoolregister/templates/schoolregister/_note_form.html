@@ -1,0 +1,7 @@
+{% block note_form %}
+  <form class="note-form" action="" method="post">
+    {% csrf_token %}
+    {{ note_form }}
+    <input type="submit" name="note-submit" value="Submit"/>
+  </form>
+{% endblock %}

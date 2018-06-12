@@ -1,0 +1,13 @@
+{% block student_grades_inline %}
+<div class="student_grades_inline">
+  {% for grade in student.grade_set.all %}
+    {% if grade.subject == taught %}
+      <div class="student_grades_inline_item">
+        <a href="{% url 'schoolregister:grade_details' student_pk=student.id grade_pk=grade.id %}">
+          {{ grade.rate }}
+        </a>
+      </div>
+      {% endif %}
+  {% endfor %}
+</div>
+{% endblock %}

@@ -23,20 +23,19 @@ from .forms import *
 
 logger = logging.getLogger(__name__)
 
-@method_decorator(teacher_required, name='dispatch')
-class GiveGradeView(View):
-    template_name = 'schoolregister/give_grade.html'
-    form_class = GiveGrade
+
+@method_decorator(student_or_teacher_required, name='dispatch')
+class GradeView(View):
+    template_name = 'schoolregister/grade_details.html'
+    form_class = GradeForm
 
     def get(self, request, *args, **kwargs):
-        student = get_object_or_404(Student, pk=kwargs['pk'])
-        context = { 'form':self.form_class(request.user),
-                    'student': student }
-        return render(request, self.template_name, context)
+        grade = get_object_or_404(Grade, pk=kwargs['grade_pk'])
+        return render(request, self.template_name, {'grade':grade})
 
     def post(self, request, *args, **kwargs):
-        student = get_object_or_404(Student, pk=kwargs['pk'])
-        form = self.form_class(request.user, request.POST)
+        student = get_object_or_404(Student, pk=kwargs['student_pk'])
+        form = self.form_class(request.user, student, request.POST)
         if form.is_valid():
             grade = Grade(
                 student=student,
@@ -48,27 +47,23 @@ class GiveGradeView(View):
                 description=form.cleaned_data['Description']
             )
             grade.save()
-            return HttpResponseRedirect(reverse('schoolregister:student_details', \
-                kwargs={'pk':student.id}))
+        return HttpResponseRedirect(reverse('schoolregister:student_details', \
+            kwargs={'student_pk':student.id}))
+
+
+@method_decorator(teacher_required, name='dispatch')
+class GradeAddView(GradeView):
+    template_name = 'schoolregister/form_base.html'
 
 
 @method_decorator(student_or_teacher_required, name='dispatch')
-class GradeView(generic.DetailView):
-    model = Grade
-    template_name = 'schoolregister/grade_details.html'
+class GradeEditView(GradeView):
+    template_name = 'schoolregister/form_base.html'
 
 
 @method_decorator(student_or_teacher_required, name='dispatch')
-class GradesView(View):
-    template_name = 'schoolregister/student_grades.html'
-
-    def get(self, request, *args, **kwargs):
-        student = Student.objects.get(id=kwargs['pk'])
-        if not request.user.is_teacher:
-            if request.user.student != student:
-                return HttpResponseForbidden("Forbidden.")
-        context = {'student':student}
-        return render(request, self.template_name, context)
+class GradeDeleteView(GradeView):
+    template_name = 'schoolregister/form_base.html'
 
 
 @method_decorator(student_or_teacher_required, name='dispatch')
@@ -179,29 +174,100 @@ class LessonView(View):
 
 
 @method_decorator(student_or_teacher_required, name='dispatch')
-class NoteView(generic.DetailView):
-    model = Note
+class NoteView(View):
     template_name = 'schoolregister/note_details.html'
 
+    def get(self, request, *args, **kwargs):
+        note = get_object_or_404(Note, pk=kwargs['note_pk'])
+        return render(request, self.template_name, {'note':note})
+
+    def post(self, request, *args, **kwargs):
+        student = get_object_or_404(Student, pk=kwargs['student_pk'])
+        form = self.form_class(request.user, student, request.POST)
+        if form.is_valid():
+            grade = Grade(
+                student=student,
+                given_by=request.user.teacher,
+                datetime=timezone.now(),
+                subject=form.cleaned_data['Subject'],
+                weight=form.cleaned_data['Weight'],
+                rate=form.cleaned_data['Rate'],
+                description=form.cleaned_data['Description']
+            )
+            grade.save()
+        return HttpResponseRedirect(reverse('schoolregister:student_details', \
+            kwargs={'student_pk':student.id}))
+
 
 @method_decorator(student_or_teacher_required, name='dispatch')
-class NotesView(View):
-    template_name = 'schoolregister/student_notes.html'
+class NoteAddView(View):
+    template_name = 'schoolregister/note_details.html'
 
     def get(self, request, *args, **kwargs):
-        student = Student.objects.get(id=kwargs['pk'])
-        if not request.user.is_teacher:
-            if request.user.student != student:
-                return HttpResponseForbidden("Forbidden.")
-        context = {'student':student}
-        context['notes'] = student.note_set.all().order_by('-datetime')
-
+        note = get_object_or_404(Note, pk=kwargs['note_pk'])
+        return render(request, self.template_name, {'note':note})
 
 
 @method_decorator(student_or_teacher_required, name='dispatch')
-class StudentView(generic.DetailView):
-    model = Student
+class NoteEditView(View):
+    template_name = 'schoolregister/note_details.html'
+
+    def get(self, request, *args, **kwargs):
+        note = get_object_or_404(Note, pk=kwargs['note_pk'])
+        return render(request, self.template_name, {'note':note})
+
+
+@method_decorator(student_or_teacher_required, name='dispatch')
+class NoteDeleteView(View):
+    template_name = 'schoolregister/note_details.html'
+
+    def get(self, request, *args, **kwargs):
+        note = get_object_or_404(Note, pk=kwargs['note_pk'])
+        return render(request, self.template_name, {'note':note})
+
+
+@method_decorator(student_or_teacher_required, name='dispatch')
+class StudentView(View):
     template_name = 'schoolregister/student_details.html'
+    grade_form_class = GradeForm
+    note_form_class = NoteForm
+
+    def get(self, request, *args, **kwargs):
+        student = get_object_or_404(Student, pk=kwargs['student_pk'])
+        context = { 'student' : student,
+                    'grade_form' : GradeForm(request.user, student),
+                    'note_form' : NoteForm(request.user) }
+        return render(request, self.template_name, context)
+
+
+    def post(self, request, *args, **kwargs):
+        student = get_object_or_404(Student, pk=kwargs['student_pk'])
+        if 'grade-submit' in request.POST:
+            form = self.grade_form_class(request.user, student, request.POST)
+            if form.is_valid():
+                grade = Grade(
+                    student=student,
+                    given_by=request.user.teacher,
+                    datetime=timezone.now(),
+                    subject=form.cleaned_data['Subject'],
+                    weight=form.cleaned_data['Weight'],
+                    rate=form.cleaned_data['Rate'],
+                    description=form.cleaned_data['Description']
+                )
+                grade.save()
+        elif 'note-submit' in request.POST:
+            form = self.note_form_class(request.user, request.POST)
+            if form.is_valid():
+                note = Note(
+                    student=student,
+                    given_by=request.user.teacher,
+                    datetime=timezone.now(),
+                    positive=form.cleaned_data['Kind of note'],
+                    text=form.cleaned_data['Description']
+                )
+                note.save()
+        return HttpResponseRedirect(reverse('schoolregister:student_details', \
+            kwargs={'student_pk':student.id}))
 
 
 @method_decorator(student_or_teacher_required, name='dispatch')

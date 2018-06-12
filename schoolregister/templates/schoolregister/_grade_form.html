@@ -1,0 +1,7 @@
+{% block grade_form %}
+  <form class="grade-form" action="" method="post">
+    {% csrf_token %}
+    {{ grade_form }}
+    <input type="submit" name="grade-submit" value="Submit"/>
+  </form>
+{% endblock %}

@@ -1,9 +1,13 @@
 {% block note_block %}
   <div>
     {% if note.positive %}
-      <a href="{% url 'schoolregister:note_details' note.id %}"><strong><h3 style="color: var(--green-color);">GOOD</h3></strong></a>
+      <a href="{% url 'schoolregister:note_details' student_pk=note.student.id note_pk=note.id %}">
+        <strong><h3 style="color: var(--green-color);">GOOD</h3></strong>
+      </a>
     {% else %}
-      <a href="{% url 'schoolregister:note_details' note.id %}"><strong><h3 style="color: var(--red-color);">BAD</h3></strong></a>
+      <a href="{% url 'schoolregister:note_details' student_pk=note.student.id note_pk=note.id %}">
+        <strong><h3 style="color: var(--red-color);">BAD</h3></strong>
+      </a>
     {% endif %}
     <h4>{{ note.student }}</h4>
     <p>{{ note.text }}</p>

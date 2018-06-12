@@ -73,6 +73,10 @@ class Teacher(models.Model):
             return active[0]
         return None
 
+    def is_teaching(self, student):
+        common_subjects = student.group.taught_set.filter(teacher=self)
+        return common_subjects 
+
 
 class Group(models.Model):
     year = models.IntegerField(validators=[MinValueValidator(0),

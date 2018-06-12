@@ -1,0 +1,9 @@
+<details><summary>Notes</summary>
+  <ul>
+    {% for note in student.note_set.all %}
+      <li>
+        {% include 'schoolregister/_note_inline.html' %}
+      </li>
+    {% endfor %}
+  </ul>
+</details>

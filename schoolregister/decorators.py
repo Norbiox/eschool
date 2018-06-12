@@ -18,7 +18,7 @@ def student_required(function=None):
 
 def student_or_teacher_required(function=None):
     '''
-    Decorator for views that checks that the logged in user is a student.
+    Decorator for views that checks that the logged in user is a student or teacher.
     '''
     actual_decorator = user_passes_test(
         lambda u: u.is_active and (u.is_student or u.is_teacher),
