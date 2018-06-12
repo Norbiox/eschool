@@ -5,7 +5,7 @@ import logging
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator, \
-    RegexValidator
+    RegexValidator, MaxLengthValidator
 from django.db import models
 
 from home.models import User
@@ -174,8 +174,9 @@ class Grade(models.Model):
     subject = models.ForeignKey(Taught, on_delete=models.CASCADE)
     given_by = models.ForeignKey(Teacher, on_delete=models.CASCADE)
     rate = models.ForeignKey(Rate, null=True, blank=True, on_delete=models.CASCADE)
-    weight = models.IntegerField(default=1)
-    description = models.CharField(max_length=200, default='', null=True, blank=True)
+    weight = models.FloatField(default=1.0)
+    description = models.CharField(max_length=200, default='', null=True, \
+        blank=True, validators=[MaxLengthValidator(200)])
     datetime = models.DateTimeField(auto_now=True)
 
     class Meta:

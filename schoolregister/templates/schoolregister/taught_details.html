@@ -7,8 +7,6 @@
 <p>Teacher: <a href="{% url 'schoolregister:teacher_details'  taught.teacher.id %}">{{ taught.teacher.full_name }}</a></p>
 
 {% if user.is_teacher %}
-  {% with students=taught.group.students %}
-    {% include 'schoolregister/_students.html' %}
-  {% endwith %}
+  {% include 'schoolregister/_students.html' with students=taught.group.student_set.all %}
 {% endif %}
 {% endblock %}

@@ -30,15 +30,26 @@ class GiveGradeView(View):
 
     def get(self, request, *args, **kwargs):
         student = get_object_or_404(Student, pk=kwargs['pk'])
-        context = { 'form':self.form_class(),
+        context = { 'form':self.form_class(request.user),
                     'student': student }
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
         student = get_object_or_404(Student, pk=kwargs['pk'])
-        form = self.form_class(request.POST)
+        form = self.form_class(request.user, request.POST)
         if form.is_valid():
-            pass
+            grade = Grade(
+                student=student,
+                given_by=request.user.teacher,
+                datetime=timezone.now(),
+                subject=form.cleaned_data['Subject'],
+                weight=form.cleaned_data['Weight'],
+                rate=form.cleaned_data['Rate'],
+                description=form.cleaned_data['Description']
+            )
+            grade.save()
+            return HttpResponseRedirect(reverse('schoolregister:student_details', \
+                kwargs={'pk':student.id}))
 
 
 @method_decorator(student_or_teacher_required, name='dispatch')
