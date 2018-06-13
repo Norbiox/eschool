@@ -12,11 +12,35 @@
     <input type="submit" value="Submit"/>
   </form>
 {% else %}
-  <h2>{{ grade.rate }} - {{ grade.rate.name }}</h2>
-  <h4>{{ grade.student }}</h4>
-  <h4>{{ grade.subject.subject }}</h4>
+  {% if grade.weight <= 0.8 %}
+  <div id="low_weight_grade">
+    <h2><a href="{% url 'schoolregister:grade_details' student_pk=grade.student.id grade_pk=grade.id %}">
+      {{ grade.rate }} - {{ grade.rate.name }}
+    </a></h2>
+  </div>
+  {% elif grade.weight >= 1.2 %}
+  <div id="high_weight_grade">
+    <h2><a href="{% url 'schoolregister:grade_details' student_pk=grade.student.id grade_pk=grade.id %}">
+      {{ grade.rate }} - {{ grade.rate.name }}
+    </a></h2>
+  </div>
+  {% else %}
+  <div id="medium_weight_grade">
+    <h2><a href="{% url 'schoolregister:grade_details' student_pk=grade.student.id grade_pk=grade.id %}">
+      {{ grade.rate }} - {{ grade.rate.name }}
+    </a></h2>
+  </div>
+  {% endif %}
+  <a href="{% url 'schoolregister:student_details' student_pk=grade.student.id %}">
+    <h4>{{ grade.student }}</h4>
+  </a>
+  <a href="{% url 'schoolregister:taught_details' taught_pk=grade.subject.id %}">
+    <h4>{{ grade.subject.subject }}</h4>
+  </a>
   <p>{{ grade.description }}</p>
-  <h5>{{ grade.given_by.full_name }}</h5>
+  <a href="{% url 'schoolregister:teacher_details' teacher_pk=grade.given_by.id %}">
+    <h5>{{ grade.given_by.full_name }}</h5>
+  </a>
   <h5>{{ grade.datetime }}</h5>
 {% endif %}
 {% endblock %}

@@ -1,5 +1,0 @@
-nazwa użytkownika:      ImiNaz + 5_ostatnich_liczb_z_PESEL
-hasło:                  qwerty
-email:                  1_litera_imienia+nazwisko@school.com
-status:                 teacher LUB student
-adres:                  ul. Ulica 3[m.12] 12-345 Miasto

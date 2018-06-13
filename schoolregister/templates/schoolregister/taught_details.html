@@ -3,10 +3,14 @@
 {% block title %}Subject {{ taught }}{% endblock %}
 
 {% block content %}
+
 <h2>{{ taught.subject }} in class {{ taught.group.abbrev }}</h2>
 <p>Teacher: <a href="{% url 'schoolregister:teacher_details'  taught.teacher.id %}">{{ taught.teacher.full_name }}</a></p>
 
-{% if user.is_teacher %}
-  {% include 'schoolregister/_students.html' with students=taught.group.student_set.all %}
+{% if user.is_student and taught in student.group.taugth_set.all %}
+  {% include "schoolregister/_students_data_on_subject.html" %}
+{% elif user.is_teacher %}
+  {% include "schoolregister/_group_data_on_subject.html" %}
 {% endif %}
+
 {% endblock %}

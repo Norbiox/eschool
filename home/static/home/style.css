@@ -12,6 +12,7 @@ Released   : 20120710
 :root {
 	--green-color: #73E34D;
 	--red-color: #EB4444;
+	--black-color: #000000
 }
 
 * {
@@ -75,6 +76,20 @@ br.clearfix {
 	clear: both;
 }
 
+button {
+	font-size: 1em;
+	font-family: Kreon, sans-serif;
+}
+
+details[open] summary ~ * {
+  animation: sweep .4s ease-in-out;
+}
+
+@keyframes sweep {
+  0%    {opacity: 0; margin-left: -10px}
+  100%  {opacity: 1; margin-left: 0px}
+}
+
 footer {
 	text-align: center;
 	padding: 30px 0 90px 0;
@@ -122,6 +137,10 @@ img.alignleft {
 
 img.aligntop {
 	margin: 5px 0 20px 0;
+}
+
+input {
+	font-size: 1em;
 }
 
 nav {
@@ -264,6 +283,26 @@ ul h4 {
 	box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.25);
 }
 
+#col1 {
+	float: left;
+	width: 330px;
+	overflow: hidden;
+}
+
+#col2 {
+	width: 330px;
+	overflow: hidden;
+	margin: 0 0 0 365px;
+}
+
+#search {
+	line-height: 125px;
+	top: 0;
+	position: absolute;
+	right: 0;
+	height: 125px;
+}
+
 #logo {
 	position: absolute;
 	line-height: 125px;
@@ -283,24 +322,16 @@ ul h4 {
 	font-size: 3em;
 }
 
-#col1 {
-	float: left;
-	width: 330px;
-	overflow: hidden;
+#high_weight_grade a {
+	color: var(--green-color);
 }
 
-#col2 {
-	width: 330px;
-	overflow: hidden;
-	margin: 0 0 0 365px;
+#medium_weight_grade a {
+	color: var(--black-color);
 }
 
-#search {
-	line-height: 125px;
-	top: 0;
-	position: absolute;
-	right: 0;
-	height: 125px;
+#low_weight_grade a {
+	color: var(--green-color);
 }
 
 #search input.form-submit {

@@ -1,9 +1,9 @@
-{% extends 'home/base.html' %}
+{% extends 'home/__base.html' %}
 
 {% block title %}Welcome{% endblock %}
 
 {% block content %}
-{% if user.authenticated %}
+{% if user.is_authenticated %}
 <h2>Hello, {{ user.first_name }}</h2>
 {% else %}
 <h2>Welcome</h2>

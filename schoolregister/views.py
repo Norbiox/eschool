@@ -27,6 +27,8 @@ logger = logging.getLogger(__name__)
 @method_decorator(student_or_teacher_required, name='dispatch')
 class GradeView(View):
     template_name = 'schoolregister/grade_details.html'
+    header_template = "schoolregister/_student_header.html"
+    form_template= "schoolregister/_grade_form.html"
     form_class = GradeForm
 
     def get(self, request, *args, **kwargs):
@@ -37,16 +39,7 @@ class GradeView(View):
         student = get_object_or_404(Student, pk=kwargs['student_pk'])
         form = self.form_class(request.user, student, request.POST)
         if form.is_valid():
-            grade = Grade(
-                student=student,
-                given_by=request.user.teacher,
-                datetime=timezone.now(),
-                subject=form.cleaned_data['Subject'],
-                weight=form.cleaned_data['Weight'],
-                rate=form.cleaned_data['Rate'],
-                description=form.cleaned_data['Description']
-            )
-            grade.save()
+            form.save(request.user, student)
         return HttpResponseRedirect(reverse('schoolregister:student_details', \
             kwargs={'student_pk':student.id}))
 
@@ -54,16 +47,38 @@ class GradeView(View):
 @method_decorator(teacher_required, name='dispatch')
 class GradeAddView(GradeView):
     template_name = 'schoolregister/form_base.html'
+    title = "Add grade"
+
+    def get(self, request, *args, **kwargs):
+        student = get_object_or_404(Student, pk=kwargs['student_pk'])
+        context = {
+            'title' : self.title,
+            'student' : student,
+            'header_template' : self.header_template,
+            'form_template': self.form_template,
+            'grade_form' : self.form_class(request.user, student)
+        }
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        student = get_object_or_404(Student, pk=kwargs['student_pk'])
+        form = self.form_class(request.user, student, request.POST)
+        if form.is_valid():
+            form.save(request.user, student)
+        return HttpResponseRedirect(reverse('schoolregister:student_details', \
+            kwargs={'student_pk':student.id}))
 
 
 @method_decorator(student_or_teacher_required, name='dispatch')
 class GradeEditView(GradeView):
     template_name = 'schoolregister/form_base.html'
+    title = "Edit grade"
 
 
 @method_decorator(student_or_teacher_required, name='dispatch')
 class GradeDeleteView(GradeView):
     template_name = 'schoolregister/form_base.html'
+    title = "Delete grade"
 
 
 @method_decorator(student_or_teacher_required, name='dispatch')
@@ -124,22 +139,34 @@ class IndexView(View):
         return render(request, self.template_name, {'user':user})
 
 
-@method_decorator(teacher_required, name='dispatch')
+@method_decorator(student_or_teacher_required, name='dispatch')
 class LessonPortalView(View):
     template_name = 'schoolregister/lesson_portal.html'
+    form_class = LessonForm
 
     def get(self, request, *args, **kwargs):
         if request.user.is_teacher:
             teacher = request.user.teacher
             context = { 'teacher':teacher,
                         'active_lesson':teacher.active_lesson(),
-                        'taughts':teacher.taught_set.all() }
+                        'taughts':teacher.taught_set.all(),
+                        'add_lesson_form': self.form_class(request.user) }
         else:
             student = request.user.student
             context = { 'student':student,
                         'active_lesson':student.active_lesson() }
         print(context['active_lesson'])
         return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        teacher = request.user.teacher
+        if not teacher.active_lesson():
+            form = self.form_class(request.user, request.POST)
+            if form.is_valid():
+                form.save(request.user)
+                return HttpResponseRedirect(reverse('schoolregister:lesson_details', \
+                    kwargs={'lesson_pk':lesson.id}))
+        return HttpResponseRedirect(reverse('schoolregister:lesson_portal'))
 
 
 @method_decorator(student_or_teacher_required, name='dispatch')
@@ -148,13 +175,13 @@ class LessonView(View):
 
     def get(self, request, *args, **kwargs):
         context = {}
-        context['lesson'] = get_object_or_404(Lesson, pk=kwargs['pk'])
+        context['lesson'] = get_object_or_404(Lesson, pk=kwargs['lesson_pk'])
         context['presences'] = context['lesson'].presence_set.all()
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
         context = {}
-        context['lesson'] = get_object_or_404(Lesson, pk=kwargs['pk'])
+        context['lesson'] = get_object_or_404(Lesson, pk=kwargs['lesson_pk'])
         context['presences'] = context['lesson'].presence_set.all()
         logger.info("POST: {}".format(request.POST))
         if request.POST.get("submit"):
@@ -164,7 +191,7 @@ class LessonView(View):
                     presence.state = True
                 else:
                     presence.state = False
-                presence.save()
+                presence.save(request.user)
         elif request.POST.get("end_lesson"):
             context['lesson'].end_time = timezone.now()
             context['lesson'].save()
@@ -176,6 +203,9 @@ class LessonView(View):
 @method_decorator(student_or_teacher_required, name='dispatch')
 class NoteView(View):
     template_name = 'schoolregister/note_details.html'
+    header_template = "schoolregister/_student_header.html"
+    form_template= "schoolregister/_note_form.html"
+    form_class = NoteForm
 
     def get(self, request, *args, **kwargs):
         note = get_object_or_404(Note, pk=kwargs['note_pk'])
@@ -183,29 +213,35 @@ class NoteView(View):
 
     def post(self, request, *args, **kwargs):
         student = get_object_or_404(Student, pk=kwargs['student_pk'])
-        form = self.form_class(request.user, student, request.POST)
+        form = self.note_form_class(request.user, request.POST)
         if form.is_valid():
-            grade = Grade(
-                student=student,
-                given_by=request.user.teacher,
-                datetime=timezone.now(),
-                subject=form.cleaned_data['Subject'],
-                weight=form.cleaned_data['Weight'],
-                rate=form.cleaned_data['Rate'],
-                description=form.cleaned_data['Description']
-            )
-            grade.save()
+            form.save(request.user, student)
         return HttpResponseRedirect(reverse('schoolregister:student_details', \
             kwargs={'student_pk':student.id}))
 
 
 @method_decorator(student_or_teacher_required, name='dispatch')
-class NoteAddView(View):
+class NoteAddView(NoteView):
     template_name = 'schoolregister/note_details.html'
 
     def get(self, request, *args, **kwargs):
-        note = get_object_or_404(Note, pk=kwargs['note_pk'])
-        return render(request, self.template_name, {'note':note})
+        student = get_object_or_404(Student, pk=kwargs['student_pk'])
+        context = {
+            'title' : self.title,
+            'student' : student,
+            'header_template' : self.header_template,
+            'form_template': self.form_template,
+            'grade_form' : self.form_class(request.user, student)
+        }
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        student = get_object_or_404(Student, pk=kwargs['student_pk'])
+        form = self.form_class(request.user, student, request.POST)
+        if form.is_valid():
+            form.save(request.user, student)
+        return HttpResponseRedirect(reverse('schoolregister:student_details', \
+            kwargs={'student_pk':student.id}))
 
 
 @method_decorator(student_or_teacher_required, name='dispatch')
@@ -245,42 +281,28 @@ class StudentView(View):
         if 'grade-submit' in request.POST:
             form = self.grade_form_class(request.user, student, request.POST)
             if form.is_valid():
-                grade = Grade(
-                    student=student,
-                    given_by=request.user.teacher,
-                    datetime=timezone.now(),
-                    subject=form.cleaned_data['Subject'],
-                    weight=form.cleaned_data['Weight'],
-                    rate=form.cleaned_data['Rate'],
-                    description=form.cleaned_data['Description']
-                )
-                grade.save()
+                form.save(request.user, student)
         elif 'note-submit' in request.POST:
             form = self.note_form_class(request.user, request.POST)
             if form.is_valid():
-                note = Note(
-                    student=student,
-                    given_by=request.user.teacher,
-                    datetime=timezone.now(),
-                    positive=form.cleaned_data['Kind of note'],
-                    text=form.cleaned_data['Description']
-                )
-                note.save()
+                form.save(request.user, student)
         return HttpResponseRedirect(reverse('schoolregister:student_details', \
             kwargs={'student_pk':student.id}))
 
 
 @method_decorator(student_or_teacher_required, name='dispatch')
-class TaughtView(generic.DetailView):
-    model = Taught
+class TaughtView(View):
     template_name = 'schoolregister/taught_details.html'
+
+    def get(self, request, *args, **kwargs):
+        taught = get_object_or_404(Taught, pk=kwargs['taught_pk'])
+        return render(request, self.template_name, {'taught':taught})
 
 
 @method_decorator(student_or_teacher_required, name='dispatch')
-class TeacherView(generic.DetailView):
-    model = Teacher
+class TeacherView(View):
     template_name = 'schoolregister/teacher_details.html'
 
-
-class UnactiveUserView(View):
-    pass
+    def get(self, request, *args, **kwargs):
+        teacher = get_object_or_404(Teacher, pk=kwargs['teacher_pk'])
+        return render(request, self.template_name, {'teacher':teacher})

@@ -75,7 +75,7 @@ class Teacher(models.Model):
 
     def is_teaching(self, student):
         common_subjects = student.group.taught_set.filter(teacher=self)
-        return common_subjects 
+        return common_subjects
 
 
 class Group(models.Model):
@@ -174,6 +174,10 @@ class Rate(models.Model):
 
 
 class Grade(models.Model):
+
+    class Meta:
+        ordering = ['datetime']
+
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     subject = models.ForeignKey(Taught, on_delete=models.CASCADE)
     given_by = models.ForeignKey(Teacher, on_delete=models.CASCADE)
@@ -235,6 +239,10 @@ class Lesson(models.Model):
 
 
 class Note(models.Model):
+
+    class Meta:
+        ordering = ['-datetime']
+
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     given_by = models.ForeignKey(Teacher, on_delete=models.CASCADE)
     positive = models.BooleanField()

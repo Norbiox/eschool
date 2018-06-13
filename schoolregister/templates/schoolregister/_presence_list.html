@@ -6,9 +6,11 @@
       {% for presence in presences %}
         <li>
           {% include "schoolregister/_presence_checkbox.html" with lesson=presence.lesson %}
-          <p>{{ presence.student.number_of }}. {{ presence.student }}</p>
-          {% include 'schoolregister/_student_grades_list.html' %}
-          {% include 'schoolregister/_student_minimenu.html' %}
+          <a href="{% url "schoolregister:student_details" presence.student.pk %}">
+            <p>{{ presence.student.number_of }}. {{ presence.student }}</p>
+          </a>
+          {% include 'schoolregister/_student_grades_inline.html' with student=presence.student taught=presence.lesson.taught %}
+          {% include 'schoolregister/_student_minimenu.html'  with student=presence.student %}
         </li>
       {% endfor %}
     </ul>

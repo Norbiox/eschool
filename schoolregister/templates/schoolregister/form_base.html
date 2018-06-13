@@ -1,0 +1,9 @@
+{% extends "schoolregister/__base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+  <h3>{{ title }}</h3>
+  {% include header_template %}
+  {% include form_template %}
+{% endblock %}

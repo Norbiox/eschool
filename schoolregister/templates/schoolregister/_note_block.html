@@ -9,9 +9,13 @@
         <strong><h3 style="color: var(--red-color);">BAD</h3></strong>
       </a>
     {% endif %}
-    <h4>{{ note.student }}</h4>
+    <a href="{% url 'schoolregister:student_details' student_pk=note.student.id%}">
+      <h4>{{ note.student }}</h4>
+    </a>
     <p>{{ note.text }}</p>
-    <h5>{{ note.given_by.full_name }}</h5>
+    <a href="{% url 'schoolregister:teacher_details' teacher_pk=note.given_by.id %}">
+      <h5>{{ note.given_by.full_name }}</h5>
+    </a>
     <h5>{{ note.datetime }}</h5>
   </div>
 {% endblock %}

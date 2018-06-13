@@ -3,7 +3,6 @@
     {% for taught in taughts %}
       <li>
         <a href="{% url 'schoolregister:taught_details' taught.id %}">{{ taught }}</a>
-        {% include 'schoolregister/_taught_minimenu.html' %}
       </li>
     {% endfor %}
   </ul>

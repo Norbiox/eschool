@@ -1,6 +1,7 @@
 from django import forms
 from django.db import models
 from django.forms import ModelForm
+from django.utils import timezone
 
 from .models import *
 
@@ -25,11 +26,42 @@ class GradeForm(forms.Form):
             empty_value=''
         )
 
+    def save(self, user, student, *args, **kwargs):
+        grade = Grade(
+            student=student,
+            given_by=user.teacher,
+            datetime=timezone.now(),
+            subject=self.cleaned_data['Subject'],
+            weight=self.cleaned_data['Weight'],
+            rate=self.cleaned_data['Rate'],
+            description=self.cleaned_data['Description']
+        )
+        grade.save()
+
 
 class LessonForm(forms.Form):
 
     def __init__(self, user, *args, **kwargs):
         super(LessonForm, self).__init__(*args, **kwargs)
+        if 'taught' not in kwargs:
+            self.fields['Class&Subject'] = forms.ModelChoiceField(
+                queryset=Taught.objects.filter(teacher=user.teacher)
+            )
+        self.fields['Topic'] = forms.CharField(
+            widget=forms.Textarea(attrs={'cols':'100', 'rows':'2', 'style':'resize:none;'}),
+            max_length=Grade._meta.get_field('description').max_length,
+            required = False,
+            empty_value=''
+        )
+
+    def save(self, user, *args, **kwargs):
+        lesson = Lesson(
+            taught=self.cleaned_data['Class&Subject'],
+            teacher=teacher,
+            start_time=timezone.now(),
+            topic=self.cleaned_data['Topic']
+        )
+        lesson.save()
 
 
 class NoteForm(forms.Form):
@@ -45,3 +77,13 @@ class NoteForm(forms.Form):
             required = True,
             empty_value=''
         )
+
+    def save(self, user, student, *args, **kwargs):
+        note = Note(
+            student=student,
+            given_by=user.teacher,
+            datetime=timezone.now(),
+            positive=self.cleaned_data['Kind of note'],
+            text=self.cleaned_data['Description']
+        )
+        note.save()

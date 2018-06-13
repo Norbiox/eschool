@@ -1,13 +1,27 @@
 {% block student_grades_inline %}
 <div class="student_grades_inline">
-  {% for grade in student.grade_set.all %}
+  {% for grade in grades %}
     {% if grade.subject == taught %}
-      <div class="student_grades_inline_item">
-        <a href="{% url 'schoolregister:grade_details' student_pk=student.id grade_pk=grade.id %}">
+      {% if grade.weight <= 0.8 %}
+      <div class="student_grades_inline_item" id="low_weight_grade">
+        <a href="{% url 'schoolregister:grade_details' student_pk=grade.student.id grade_pk=grade.id %}">
+          {{ grade.rate }}
+        </a>
+      </div>
+      {% elif grade.weight >= 1.2 %}
+      <div class="student_grades_inline_item" id="high_weight_grade">
+        <a href="{% url 'schoolregister:grade_details' student_pk=grade.student.id grade_pk=grade.id %}">
+          {{ grade.rate }}
+        </a>
+      </div>
+      {% else %}
+      <div class="student_grades_inline_item" id="medium_weight_grade">
+        <a href="{% url 'schoolregister:grade_details' student_pk=grade.student.id grade_pk=grade.id %}">
           {{ grade.rate }}
         </a>
       </div>
       {% endif %}
+    {% endif %}
   {% endfor %}
 </div>
 {% endblock %}
