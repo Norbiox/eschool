@@ -16,6 +16,9 @@ import logging.config
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+MEDIA_URL = '/uploads/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
@@ -33,6 +36,7 @@ ALLOWED_HOSTS = ['localhost','192.168.2.100']
 
 INSTALLED_APPS = [
     'home.apps.HomeConfig',
+    'filetransfers',
     'schoolregister.apps.SchoolregisterConfig',
     'django.contrib.admin',
     'django.contrib.auth',

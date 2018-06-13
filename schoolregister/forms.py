@@ -5,6 +5,7 @@ from django.utils import timezone
 
 from .models import *
 
+
 class GradeForm(forms.Form):
 
     def __init__(self, user, student, *args, **kwargs):

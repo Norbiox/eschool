@@ -1,0 +1,50 @@
+{% block files_list %}
+  <details open><summary>My files</summary>
+  <ul>
+    {% for file in my_files %}
+      <li>
+        <div class="file_list_element">
+          <p>{{ file }}</p>
+          <h6>{{ file.description }}</h6>
+          <form class="file_inline_form" action="" method="post">
+            {% csrf_token %}
+            <input type="submit" name="download_button" value="Download">
+            <input type="submit" name="delete_button" value="Delete">
+          </form>
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+  </details>
+
+  <details open><summary>Shared with me</summary>
+  <ul>
+    {% for share in shares %}
+      <li>
+        <div class="file_list_element">
+          <p>{{ share.file }}</p>
+          <h6>{{ share.file.description }}</h6>
+          <a href="{% url 'home:profile' share.file.owner.id %}">
+            {{ share.file.owner.full_name }}
+          </a>
+          <form class="file_inline_form" action="" method="post">
+            {% csrf_token %}
+            <input type="submit" name="shared_download_button" value="Download">
+          </form>
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+  </details>
+
+  <h4>Upload file</h4>
+  <div class='form_div'>
+    <form class="file_upload_form" action="" method="post" enctype='multipart/form-data'>
+      {% csrf_token %}
+      {{ add_file_form }}
+      <input type="submit" name="upload_submit" value="Upload">
+    </form>
+  </div>
+
+
+{% endblock %}

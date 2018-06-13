@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import resolve, reverse
 from django.views import View
-from django.views.generic import DetailView, FormView, ListView, RedirectView
+from django.views import generic, View
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
@@ -16,6 +16,7 @@ from django.views.decorators.debug import sensitive_post_parameters
 from django.utils.http import is_safe_url
 
 from .models import *
+from .forms import *
 
 
 class IndexView(View):
@@ -26,6 +27,30 @@ class IndexView(View):
         return render(request, self.template_name, context)
 
 
-class ProfileView(DetailView):
-    model = User
+@method_decorator(login_required, name='dispatch')
+class ProfileView(View):
     template_name = 'home/profile.html'
+
+    def get(self, request, *args, **kwargs):
+        user = get_object_or_404(User, id=kwargs['pk'])
+        viewer = request.user
+        form_class = FileForm
+        context = {
+            'user' : user,
+            'viewer' : viewer,
+            'add_file_form' : form_class()
+        }
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        if request.POST['upload_submit']:
+            form = FileForm(request.POST, request.FILES)
+            if form.is_valid():
+                file = form.save(commit=False)
+                file.owner = request.user
+                file.uploaded_at = timezone.now()
+                file.save()
+            else:
+                print(form)
+        return HttpResponseRedirect(reverse('home:profile', \
+            kwargs={'pk':request.user.id}))

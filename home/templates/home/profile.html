@@ -4,4 +4,14 @@
 
 {% block content %}
   <h2>{{ user.full_name }}</h2>
+  <p>
+    {% if user.is_teacher %}
+      Teacher, email: <a href="mailto:{{ user.teacher.email }}">{{ user.teacher.email }}</a>
+    {% elif user.is_student %}
+      Student, email: <a href="mailto:{{ user.student.email }}">{{ user.student.email }}</a>
+    {% endif %}
+  </p>
+  {% if user == viewer %}
+    {% include "home/_files_list.html" with my_files=user.file_set.all shares=user.share_set.all %}
+  {% endif %}
 {% endblock %}
