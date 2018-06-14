@@ -5,7 +5,14 @@ from .models import User
 from .models import *
 
 
-admin.site.register([Grade, Note, Rate, Subject, Taught])
+admin.site.register([Grade, Rate, Subject, Taught])
+
+
+class NoteAdmin(admin.ModelAdmin):
+    list_display = ('student', 'positive', 'text', 'given_by', 'datetime')
+    list_filter = ('student', 'given_by')
+
+admin.site.register(Note, NoteAdmin)
 
 
 class StudentAdmin(admin.ModelAdmin):

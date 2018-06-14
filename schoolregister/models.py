@@ -25,6 +25,9 @@ class Subject(models.Model):
 
 
 class Teacher(models.Model):
+    class Meta:
+        ordering = ['user']
+
     NONE = ''
     ENGINEER = 'Inż.'
     MASTER = 'Mgr'
@@ -118,7 +121,6 @@ class Taught(models.Model):
 
 
 class Student(models.Model):
-
     class Meta:
         ordering = ['user']
 
@@ -132,10 +134,10 @@ class Student(models.Model):
     phone = models.CharField(max_length=17)
 
     def __str__(self):
-        return ' '.join([self.user.first_name, self.user.last_name])
+        return ' '.join([self.user.first_name, self.user.last_name, '-', str(self.group)])
 
     def __repr__(self):
-        return ' '.join([Student, self.user.first_name, self.user.last_name, ',', self.group])
+        return ' '.join([self.user.first_name, self.user.last_name, '-', str(self.group)])
 
     def full_name(self):
         return ' '.join([self.user.first_name, self.user.last_name])

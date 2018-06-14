@@ -143,6 +143,19 @@ input {
 	font-size: 1em;
 }
 
+li p {
+	padding: 0px 5px;
+}
+
+li a {
+	padding: 0px 5px;
+}
+
+li h6 {
+	padding: 0px 5px;
+	margin: auto;
+}
+
 nav {
 	bottom: 0;
 	font-family: Kreon, sans-serif;
@@ -234,6 +247,19 @@ ul h4 {
 
 .end-lesson-button {
 	font-size: 1.2em;
+}
+
+.file_inline_form {
+	margin-left: auto;
+}
+
+.file_list_element {
+	display: contents;
+}
+
+.form_div {
+	display: flex;
+	width: 40%;
 }
 
 .grade-form {
