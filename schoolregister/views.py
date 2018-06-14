@@ -270,9 +270,10 @@ class StudentView(View):
 
     def get(self, request, *args, **kwargs):
         student = get_object_or_404(Student, pk=kwargs['student_pk'])
-        context = { 'student' : student,
-                    'grade_form' : GradeForm(request.user, student),
-                    'note_form' : NoteForm(request.user) }
+        context = { 'student' : student }
+        if request.user.is_teacher:
+            context['grade_form'] = GradeForm(request.user, student)
+            context['note_form'] = NoteForm(request.user)
         return render(request, self.template_name, context)
 
 

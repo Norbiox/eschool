@@ -9,13 +9,15 @@
 {% endblock %}
 
 {% block left-column %}
-  {% if user.teacher %}
+  {% if user.is_teacher %}
     <h4>Give a grade</h4>
     {% include 'schoolregister/_grade_form.html' %}
   {% endif %}
 {% endblock %}
 
 {% block right-column %}
-  <h4>Give a note</h4>
-  {% include "schoolregister/_note_form.html" %}
+  {% if user.is_teacher %}
+    <h4>Give a note</h4>
+    {% include "schoolregister/_note_form.html" %}
+  {% endif %}
 {% endblock %}
