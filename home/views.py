@@ -31,6 +31,45 @@ class FileDeleteView(View):
         return HttpResponseForbidden()
 
 
+@method_decorator(login_required, name='dispatch')
+class FileShareView(View):
+    template_name = 'home/share_file.html'
+
+    def get(self, request, *args, **kwargs):
+        file = get_object_or_404(File, id=kwargs['pk'])
+        context = {
+            'file' : file,
+            'group_share_form' : ShareWithClassForm(),
+            'user_share_form' : ShareWithUserForm(),
+        }
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        file = get_object_or_404(File, id=kwargs['pk'])
+        if request.user != file.owner:
+            return HttpResponseForbidden()
+        if 'user-share-submit' in request.POST:
+            form = ShareWithUserForm(request.POST)
+            if form.is_valid():
+                share = Share()
+                share.file = file
+                share.shared_to = form.cleaned_data['shared_to']
+                share.shared_at = timezone.now()
+                share.save()
+        elif 'group-share-submit' in request.POST:
+            form = ShareWithClassForm(request.POST)
+            if form.is_valid():
+                group = form.cleaned_data['group']
+                for student in group.student_set.all():
+                    share = Share()
+                    share.file = file
+                    share.shared_to = student.user
+                    share.shared_at = timezone.now()
+                    share.save()
+        return HttpResponseRedirect(reverse('home:profile', \
+            kwargs={'pk':request.user.id}))
+
+
 class IndexView(View):
     template_name = 'home/index.html'
 

@@ -6,10 +6,16 @@
         <div class="file_list_element">
           <a href="/media/user_{{ file.owner.id }}/{{ file }}" %}>{{ file }}</a>
           <h6>{{ file.description }}</h6>
-          <form class="file_inline_form" action="{% url 'home:file-delete' pk=file.id %}" method="post">
-            {% csrf_token %}
-            <input type="submit" name="delete_button" value="Delete">
-          </form>
+          <div style="display: inline-flex;">
+            <form class="file_inline_form" action="{% url 'home:file-share' pk=file.id %}" method="get">
+              {% csrf_token %}
+              <input type="submit" name="share_button" value="Share">
+            </form>
+            <form class="file_inline_form" action="{% url 'home:file-delete' pk=file.id %}" method="post">
+              {% csrf_token %}
+              <input type="submit" name="delete_button" value="Delete">
+            </form>
+          </div>
         </div>
       </li>
     {% endfor %}

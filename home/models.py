@@ -19,6 +19,12 @@ class User(AbstractUser):
     is_teacher = models.BooleanField('teacher status', default=False)
     is_writer = models.BooleanField('teacher status', default=False)
 
+    def __str__(self):
+        return self.full_name()
+
+    def __repr__(self):
+        return self.full_name()
+
     def full_name(self):
         return ' '.join([self.first_name, self.last_name])
 
@@ -39,9 +45,8 @@ def user_directory_path(instance, filename):
     return 'user_{0}/{1}'.format(instance.owner.id, filename)
 
 class File(models.Model):
-
     class Meta:
-        ordering = ['uploaded_at']
+        ordering = ['owner','uploaded_at']
 
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     file = models.FileField(upload_to=user_directory_path)
@@ -56,6 +61,8 @@ class File(models.Model):
 
 
 class Share(models.Model):
+    class Meta:
+        ordering = ['shared_to','file']
 
     file = models.ForeignKey(File, on_delete=models.CASCADE)
     shared_to = models.ForeignKey(User, on_delete=models.CASCADE)

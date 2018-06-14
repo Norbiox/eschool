@@ -1,0 +1,26 @@
+{% extends "home/__base.html" %}
+
+{% block title %}Sharing {{ file }}{% endblock %}
+
+{% block content %}
+  <h3>Sharing {{ file }}</h3>
+  <div style="display: inline-flex;">
+    <div id="share-with-class-form">
+      <h4>Share with class</h4>
+      <form class="file-share-with-class-form" action="" method="post">
+        {% csrf_token %}
+        {{ group_share_form }}
+        <input type="submit" name="group-share-submit" value="Share">
+      </form>
+    </div>
+    <h2 style="margin: 20px;">OR</h2>
+    <div id="share-with-user-form">
+      <h4>Share with class</h4>
+      <form class="file-share-with-user-form" action="" method="post">
+        {% csrf_token %}
+        {{ user_share_form }}
+        <input type="submit" name="user-share-submit" value="Share">
+      </form>
+    </div>
+  </div>
+{% endblock %}
