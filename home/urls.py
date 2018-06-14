@@ -1,7 +1,9 @@
 from django.urls import path, re_path, include
 from django.conf.urls import url
 from django.contrib.auth import views as auth_views
+from django.views.static import serve
 
+from eschool import settings
 from . import views
 
 app_name = 'home'
@@ -11,5 +13,13 @@ urlpatterns = [
     re_path(r'^logout/$', auth_views.logout, {'next_page': '/'}, name='logout'),
     path('<int:pk>/profile/', include([
         path('', views.ProfileView.as_view(), name='profile'),
-    ]))
+    ])),
+    path('file/<int:pk>/delete/', views.FileDeleteView.as_view(), name='file-delete'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += [
+        url(r'^media/(?P<path>.*)$', serve, {
+            'document_root': settings.MEDIA_ROOT,
+        }),
+    ]

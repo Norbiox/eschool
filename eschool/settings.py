@@ -36,7 +36,6 @@ ALLOWED_HOSTS = ['localhost','192.168.2.100']
 
 INSTALLED_APPS = [
     'home.apps.HomeConfig',
-    'filetransfers',
     'schoolregister.apps.SchoolregisterConfig',
     'django.contrib.admin',
     'django.contrib.auth',

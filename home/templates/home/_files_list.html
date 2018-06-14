@@ -4,11 +4,10 @@
     {% for file in my_files %}
       <li>
         <div class="file_list_element">
-          <p>{{ file }}</p>
+          <a href="/media/user_{{ file.owner.id }}/{{ file }}" %}>{{ file }}</a>
           <h6>{{ file.description }}</h6>
-          <form class="file_inline_form" action="" method="post">
+          <form class="file_inline_form" action="{% url 'home:file-delete' pk=file.id %}" method="post">
             {% csrf_token %}
-            <input type="submit" name="download_button" value="Download">
             <input type="submit" name="delete_button" value="Delete">
           </form>
         </div>
@@ -22,15 +21,11 @@
     {% for share in shares %}
       <li>
         <div class="file_list_element">
-          <p>{{ share.file }}</p>
+          <a href="/media/user_{{ share.file.owner.id }}/{{ share.file }}" %}>{{ share.file }}</a>
           <h6>{{ share.file.description }}</h6>
           <a href="{% url 'home:profile' share.file.owner.id %}">
             {{ share.file.owner.full_name }}
           </a>
-          <form class="file_inline_form" action="" method="post">
-            {% csrf_token %}
-            <input type="submit" name="shared_download_button" value="Download">
-          </form>
         </div>
       </li>
     {% endfor %}

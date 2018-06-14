@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.contrib.auth import REDIRECT_FIELD_NAME, login as auth_login, logout as auth_logout
-from django.http import HttpResponse, HttpResponseRedirect, Http404
+from django.http import HttpResponse, HttpResponseRedirect, Http404, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import resolve, reverse
 from django.views import View
@@ -17,6 +17,18 @@ from django.utils.http import is_safe_url
 
 from .models import *
 from .forms import *
+
+
+@method_decorator(login_required, name='dispatch')
+class FileDeleteView(View):
+
+    def post(self, request, *args, **kwargs):
+        file = get_object_or_404(File, id=kwargs['pk'])
+        if file.owner == request.user:
+            file.delete()
+            return HttpResponseRedirect(reverse('home:profile', \
+                kwargs={'pk':request.user.id}))
+        return HttpResponseForbidden()
 
 
 class IndexView(View):
