@@ -32,6 +32,7 @@ ALLOWED_HOSTS = ['localhost','192.168.2.100']
 # Application definition
 
 INSTALLED_APPS = [
+    'fileshare.apps.FileshareConfig',
     'home.apps.HomeConfig',
     'schoolregister.apps.SchoolregisterConfig',
     'django.contrib.admin',

@@ -11,7 +11,4 @@
       Student, email: <a href="mailto:{{ user.student.email }}">{{ user.student.email }}</a>
     {% endif %}
   </p>
-  {% if user == viewer %}
-    {% include "home/_files_list.html" with my_files=user.file_set.all shares=user.share_set.all %}
-  {% endif %}
 {% endblock %}

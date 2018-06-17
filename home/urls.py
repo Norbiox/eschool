@@ -14,10 +14,6 @@ urlpatterns = [
     path('<int:pk>/profile/', include([
         path('', views.ProfileView.as_view(), name='profile'),
     ])),
-    path('file/<int:pk>/', include([
-        path('delete/', views.FileDeleteView.as_view(), name='file-delete'),
-        path('share/', views.FileShareView.as_view(), name='file-share'),
-    ])),
 ]
 
 if settings.DEBUG:
