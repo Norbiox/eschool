@@ -9,6 +9,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator, \
     RegexValidator
 from django.db import models
 
+from eschool import settings
 from home.models import User
 
 
@@ -30,6 +31,12 @@ class File(models.Model):
 
     def __repr__(self):
         return os.path.basename(self.file.name)
+
+    def link(self):
+        return '/media/user_{}/{}'.format(self.owner.id, str(self))
+
+    def path(self):
+        return settings.MEDIA_ROOT + '/user_{}/{}'.format(self.owner.id, str(self))
 
 
 class Share(models.Model):

@@ -1,20 +1,15 @@
 # -*- coding: utf-8 -*-
-from django.contrib.auth import REDIRECT_FIELD_NAME, login as auth_login, logout as auth_logout
-from django.http import HttpResponse, HttpResponseRedirect, Http404, HttpResponseForbidden
-from django.shortcuts import get_object_or_404, redirect, render
-from django.urls import resolve, reverse
-from django.views import View
-from django.views import generic, View
-from django.contrib.auth import authenticate, login
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import never_cache
-from django.views.decorators.csrf import csrf_protect
-from django.views.decorators.debug import sensitive_post_parameters
-from django.utils.http import is_safe_url
 
+import os
+import mimetypes
+from django.http import HttpResponse, HttpResponseRedirect, Http404, HttpResponseForbidden
+from django.shortcuts import get_object_or_404, redirect, render, render_to_response
+from django.urls import resolve, reverse
+from django.views import generic, View
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+
+from eschool import settings
 from .models import *
 from .forms import *
 
@@ -26,14 +21,28 @@ class FileDeleteView(View):
         file = get_object_or_404(File, id=kwargs['pk'])
         if file.owner == request.user:
             file.delete()
-            return HttpResponseRedirect(reverse('home:profile', \
-                kwargs={'pk':request.user.id}))
+            if os.path.isfile(file.path()):
+                os.remove(file.path())
+            return HttpResponseRedirect(reverse('fileshare:index'))
         return HttpResponseForbidden()
 
 
 @method_decorator(login_required, name='dispatch')
+class FileDownloadView(View):
+
+    def get(self, request, *args, **kwargs):
+        file = get_object_or_404(File, id=kwargs['pk'])
+        with open(file.path(), 'rb') as f:
+            data = f.read()
+        response = HttpResponse(data, content_type=mimetypes.guess_type(file.path())[0])
+        response['Content-Disposition'] = "attachment; filename={0}".format(file)
+        response['Content-Length'] = os.path.getsize(file.path())
+        return response
+
+
+@method_decorator(login_required, name='dispatch')
 class FileShareView(View):
-    template_name = 'home/share_file.html'
+    template_name = 'fileshare/share_file.html'
 
     def get(self, request, *args, **kwargs):
         file = get_object_or_404(File, id=kwargs['pk'])
@@ -66,5 +75,39 @@ class FileShareView(View):
                     share.shared_to = student.user
                     share.shared_at = timezone.now()
                     share.save()
-        return HttpResponseRedirect(reverse('home:profile', \
-            kwargs={'pk':request.user.id}))
+        return HttpResponseRedirect(reverse('fileshare:index'))
+
+
+@method_decorator(login_required, name='dispatch')
+class FileShowView(View):
+
+    def get(self, request, *args, **kwargs):
+        file = get_object_or_404(File, id=kwargs['pk'])
+        user = request.user
+        if user == file.owner or file.share_set.filter(shared_to=user):
+            return HttpResponseRedirect(file.link())
+        return HttpResponseForbidden()
+
+
+@method_decorator(login_required, name='dispatch')
+class IndexView(View):
+    template_name = 'fileshare/index.html'
+    upload_file_form = FileForm
+
+    def get(self, request, *args, **kwargs):
+        context = {
+            'user': request.user,
+            'upload_file_form': self.upload_file_form(),
+        }
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        if request.POST['upload_submit']:
+            form = FileForm(request.POST, request.FILES)
+            if form.is_valid():
+                file = form.save(commit=False)
+                file.owner = request.user
+                file.uploaded_at = timezone.now()
+                file.save()
+                return HttpResponseRedirect('')
+        return HttpResponseRedirect(reverse('fileshare:index'))

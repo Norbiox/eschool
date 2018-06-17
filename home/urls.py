@@ -1,5 +1,4 @@
 from django.urls import path, re_path, include
-from django.conf.urls import url
 from django.contrib.auth import views as auth_views
 from django.views.static import serve
 
@@ -15,10 +14,3 @@ urlpatterns = [
         path('', views.ProfileView.as_view(), name='profile'),
     ])),
 ]
-
-if settings.DEBUG:
-    urlpatterns += [
-        url(r'^media/(?P<path>.*)$', serve, {
-            'document_root': settings.MEDIA_ROOT,
-        }),
-    ]

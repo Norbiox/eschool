@@ -1,4 +1,0 @@
-
-{% if user == viewer %}
-  {% include "home/_files_list.html" with my_files=user.file_set.all shares=user.share_set.all %}
-{% endif %}

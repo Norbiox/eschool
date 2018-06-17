@@ -167,5 +167,10 @@ logging.config.dictConfig({
             'handlers': ['console'],
             'propagate': False,
         },
+        'fileshare': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+            'propagate': False,
+        },
     },
 })

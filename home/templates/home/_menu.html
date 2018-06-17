@@ -5,7 +5,10 @@
         <li><a href="#">News</a></li>
         <li><a href="#">About School</a></li>
         <li><a href="#">Contact</a></li>
-        <li><a href="{% url 'schoolregister:index' %}">SchoolRegister</a></li>
+        {% if user.is_authenticated %}
+          <li><a href="{% url 'schoolregister:index' %}">SchoolRegister</a></li>
+          <li><a href="{% url 'fileshare:index' %}">Files Storage</a></li>
+        {% endif %}
     </ul>
     <br class="clearfix" />
 </nav>
