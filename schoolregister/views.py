@@ -24,6 +24,11 @@ from .forms import *
 logger = logging.getLogger(__name__)
 
 
+@method_decorator(teacher_required, name='dispatch')
+class GiveGroupGradesView(View):
+    pass
+
+
 @method_decorator(student_or_teacher_required, name='dispatch')
 class GradeView(View):
     template_name = 'schoolregister/grade_details.html'

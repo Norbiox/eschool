@@ -10,7 +10,6 @@
             <p>{{ presence.student.number_of }}. {{ presence.student }}</p>
           </a>
           {% include 'schoolregister/_student_grades_inline.html' with student=presence.student taught=presence.lesson.taught %}
-          {% include 'schoolregister/_student_minimenu.html'  with student=presence.student %}
         </li>
       {% endfor %}
     </ul>

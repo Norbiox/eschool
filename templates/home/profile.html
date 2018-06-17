@@ -1,0 +1,8 @@
+{% extends 'home/__base.html' %}
+
+{% block title %}{{ user.full_name }}:Profile{% endblock %}
+
+{% block content %}
+  <h2>{{ user.full_name }}</h2>
+  <p>{{ user.email }}</p>
+{% endblock %}

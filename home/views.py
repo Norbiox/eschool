@@ -32,6 +32,14 @@ class ProfileView(View):
 
     def get(self, request, *args, **kwargs):
         user = get_object_or_404(User, id=kwargs['pk'])
+        if user.is_teacher:
+            return HttpResponseRedirect(reverse(
+                'schoolregister:teacher_details', kwargs={'teacher_pk':user.teacher.id}
+            ))
+        if user.is_student:
+            return HttpResponseRedirect(reverse(
+                'schoolregister:student_details', kwargs={'student_pk':user.student.id}
+            ))
         viewer = request.user
         context = {
             'user' : user,
