@@ -6,18 +6,11 @@ from django.utils import timezone
 from .models import *
 from schoolregister.models import Group
 
-MAX_UPLOAD_SIZE = "10485760" # 10Mb
 
 class FileForm(forms.ModelForm):
     class Meta:
         model = File
         exclude = ('owner', 'uploaded_at')
-
-    def clean_file(self):
-        content = self.cleaned_data['file']
-        if content._size > int(MAX_UPLOAD_SIZE):
-            raise forms.ValidationError(("Please keep file size under %s. Current file size %s")%(MAX_UPLOAD_SIZE, content._size))
-        return content
 
 
 class ShareWithClassForm(forms.Form):
