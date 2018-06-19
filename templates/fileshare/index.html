@@ -5,7 +5,7 @@
 {% block content %}
   {% if user.is_authenticated %}
     <details open><summary>My files</summary>{% include "fileshare/_files_list.html" with my_files=user.file_set.all%}</details>
-    <details><summary>Shared with me</summary>{% include "fileshare/_shares_list.html" with shared=user.share_set.all %}</details>
+    <details><summary>Shared with me</summary>{% include "fileshare/_shares_list.html" with shares=user.share_set.all %}</details>
     {% include 'fileshare/_file_upload_form.html' %}
   {% endif %}
 {% endblock %}
