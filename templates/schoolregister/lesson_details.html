@@ -12,14 +12,14 @@
   <h5>{{ lesson.start_time }}</h5>
   {% if lesson.is_active and user.is_teacher %}
   <div style="display:flex; width:100%">
-    <div style="margin-left:auto;">
-      <form action={% url "schoolregister:give_group_grades" group_pk=group.id %}>
+    <div style="margin-left:auto; display: inline-flex;">
+      <form action={% url "schoolregister:give_group_grades" abbrev=lesson.taught.group.abbrev %}>
           {% csrf_token %}
-          <input class="give_group_grades" type="submit" value="Give grades" name="give_group_grades"/>
+          <input class="bigger-button" type="submit" value="Give grades" name="give_group_grades"/>
       </form>
       <form action="" method="post">
           {% csrf_token %}
-          <input class="end-lesson-button" type="submit" value="End lesson" name="end_lesson"/>
+          <input class="bigger-button" type="submit" value="End lesson" name="end_lesson"/>
       </form>
     </div>
   </div>
