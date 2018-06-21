@@ -1,4 +1,11 @@
-<details><summary>Grades</summary>
+<details>
+  <summary>
+    Grades
+    <h6>
+      <a>roll down</a>
+      <a href="{% url 'schoolregister:grades' student_pk=student.id %}">see all</a>
+    </h6>
+  </summary>
   <ul>
     {% for taught in student.group.taught_set.all %}
       <li>

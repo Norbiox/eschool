@@ -98,7 +98,8 @@ class GradesView(View):
     def get(self, request, *args, **kwargs):
         student = get_object_or_404(Student, id=kwargs['student_pk'])
         logger.debug("grades_view, is teacher: {}".format(request.user.is_teacher))
-        logger.debug("grades_view, is owner: {}".format(request.user.student == student))
+        if request.user.is_student:
+            logger.debug("grades_view, is owner: {}".format(request.user.student == student))
         if request.user.is_teacher or request.user.student == student:
             taughts = student.group.taught_set.all()
             grades = {t:student.grade_set.filter(subject=t) for t in taughts}
@@ -303,7 +304,8 @@ class NotesView(View):
     def get(self, request, *args, **kwargs):
         student = get_object_or_404(Student, id=kwargs['student_pk'])
         logger.debug("notes_view, is teacher: {}".format(request.user.is_teacher))
-        logger.debug("notes_view, is owner: {}".format(request.user.student == student))
+        if request.user.is_student:
+            logger.debug("notes_view, is owner: {}".format(request.user.student == student))
         if request.user.is_teacher or request.user.student == student:
             notes = student.note_set.all()
             context = {
@@ -349,7 +351,9 @@ class TaughtView(View):
 
     def get(self, request, *args, **kwargs):
         taught = get_object_or_404(Taught, pk=kwargs['taught_pk'])
-        return render(request, self.template_name, {'taught':taught})
+        lessons = Lesson.objects.filter(taught=taught)
+        context = {'taught':taught, 'lessons':lessons}
+        return render(request, self.template_name, context)
 
 
 @method_decorator(student_or_teacher_required, name='dispatch')

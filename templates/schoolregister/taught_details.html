@@ -6,6 +6,7 @@
 
 <h2>{{ taught.subject }} in class {{ taught.group.abbrev }}</h2>
 <p>Teacher: <a href="{% url 'schoolregister:teacher_details'  taught.teacher.id %}">{{ taught.teacher.full_name }}</a></p>
+{% include 'schoolregister/_taught_lessons.html' %}
 
 {% if user.is_student and taught in student.group.taugth_set.all %}
   {% include "schoolregister/_students_data_on_subject.html" %}

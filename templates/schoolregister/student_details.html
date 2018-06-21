@@ -4,8 +4,10 @@
 
 {% block content %}
   {% include 'schoolregister/_student_header.html' %}
-  {% include 'schoolregister/_student_grades.html' %}
-  {% include 'schoolregister/_student_notes.html' %}
+  {% if user.is_teacher or user.student.id == student.id %}
+    {% include 'schoolregister/_student_grades.html' %}
+    {% include 'schoolregister/_student_notes.html' %}
+  {% endif %}
 {% endblock %}
 
 {% block left-column %}
