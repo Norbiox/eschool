@@ -18,6 +18,7 @@
         <li><a href="{% url 'schoolregister:index' %}">Main Page</a></li>
         <li><a href="{% url 'schoolregister:grades' student_pk=user.student.id %}">Grades</a></li>
         <li><a href="{% url 'schoolregister:notes' student_pk=user.student.id %}">Notes</a></li>
+        <li><a href="{% url 'schoolregister:lesson_portal' %}">Lessons</a></li>
         <li><a href="#">Attendance</a></li>
         <li><a href="{% url 'fileshare:index' %}">Files Storage</a></li>
     </ul>

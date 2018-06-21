@@ -6,7 +6,7 @@
   {% if active_lesson %}
     <h3>Active lesson: <a href="{% url 'schoolregister:lesson_details' active_lesson.id %}">{{ active_lesson.taught.group }} - {{ active_lesson.taught.subject }}</a></h3>
   {% else %}
-    <h3>You have no active lesson now.</h3>
+    <h3>I have no active lesson now.</h3>
     {% if user.is_teacher %}
       <div style="width: 50%; display: inline-grid;">
         <h3>Start new lesson</h3>
@@ -22,8 +22,10 @@
 
 {% block left-column %}
   {% if user.is_teacher %}
+    <h3>I'm teaching:</h3>
     {% include 'schoolregister/_taughts.html' %}
   {% elif user.is_student %}
+    <h3>I learn those subjects:</h3>
     {% include 'schoolregister/_subjects.html' with taughts=student.group.taught_set.all %}
   {% endif %}
 {% endblock %}

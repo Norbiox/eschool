@@ -186,7 +186,6 @@ class LessonPortalView(View):
             student = request.user.student
             context = { 'student':student,
                         'active_lesson':student.active_lesson() }
-        print(context['active_lesson'])
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
