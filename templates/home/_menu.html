@@ -4,7 +4,7 @@
         <li><a href="{% url 'home:index' %}">Home</a></li>
         <li><a href="#">News</a></li>
         <li><a href="#">About School</a></li>
-        <li><a href="#">Contact</a></li>
+        <li><a href="{% url 'home:contact' %}">Contact</li>
         {% if user.is_authenticated %}
           <li><a href="{% url 'schoolregister:index' %}">SchoolRegister</a></li>
           <li><a href="{% url 'fileshare:index' %}">Files Storage</a></li>

@@ -13,4 +13,5 @@ urlpatterns = [
     path('<int:pk>/profile/', include([
         path('', views.ProfileView.as_view(), name='profile'),
     ])),
+    path('contact/', views.ContactView.as_view(), name='contact'),
 ]

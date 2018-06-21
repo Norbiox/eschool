@@ -18,6 +18,13 @@ from django.utils.http import is_safe_url
 from .models import *
 
 
+class ContactView(View):
+    template_name = 'home/contact.html'
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name, {})
+
+
 class IndexView(View):
     template_name = 'home/index.html'
 
