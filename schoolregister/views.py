@@ -92,6 +92,24 @@ class GradeDeleteView(GradeView):
 
 
 @method_decorator(student_or_teacher_required, name='dispatch')
+class GradesView(View):
+    template_name = 'schoolregister/grades_view.html'
+
+    def get(self, request, *args, **kwargs):
+        student = get_object_or_404(Student, id=kwargs['student_pk'])
+        #if not request.user.is_teacher or request.user.student.id != student.id:
+        #    return HttpResponseForbidden()
+        taughts = student.group.taught_set.all()
+        grades = {t:student.grade_set.filter(subject=t) for t in taughts}
+        context = {
+            'student': student,
+            'grades': grades,
+            'taughts': taughts
+        }
+        return render(request, self.template_name, context)
+
+
+@method_decorator(student_or_teacher_required, name='dispatch')
 class GroupsList(View):
     template_name = 'schoolregister/groups.html'
 
@@ -274,6 +292,19 @@ class NoteDeleteView(View):
     def get(self, request, *args, **kwargs):
         note = get_object_or_404(Note, pk=kwargs['note_pk'])
         return render(request, self.template_name, {'note':note})
+
+
+@method_decorator(student_or_teacher_required, name='dispatch')
+class NotesView(View):
+    template_name = 'schoolregister/notes_view.html'
+
+    def get(self, request, *args, **kwargs):
+        student = get_object_or_404(Student, id=kwargs['student_pk'])
+        if not request.user.is_teacher or request.user.student != student:
+            return HttpResponseForbidden()
+        notes = student.note_set.all()
+        context = {'student':student, 'notes':notes}
+        return render(request, self.template_name, context)
 
 
 @method_decorator(student_or_teacher_required, name='dispatch')

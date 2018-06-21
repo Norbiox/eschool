@@ -266,6 +266,10 @@ ul h4 {
 	display: inline-grid;
 }
 
+.grades_container {
+	width: 100%;
+}
+
 .note-form {
 	display: inline-grid;
 }
@@ -292,6 +296,16 @@ ul h4 {
 	margin: 0px 5px;
 }
 
+.slim-li {
+	height: auto;
+	padding: 0px;
+	align-items: center;
+}
+
+.slim-li div {
+	padding: 0px 5px;
+}
+
 .student_grades_inline {
 	display: flex;
 	margin-left: auto;
@@ -299,6 +313,26 @@ ul h4 {
 
 .student_grades_inline_item {
 	margin: 0px 5px;
+}
+
+.subject-container {
+	min-width: 7.5em;
+	display: flex;
+}
+
+.taughts_container {
+	display: inline-flex;
+	align-items: center;
+	width: 100%;
+}
+
+.taughts_container li p {
+	padding: 0px;
+	margin-bottom: 0px;
+}
+
+.taughts_container ul h4 {
+	margin-bottom: 0px;
 }
 
 #content {

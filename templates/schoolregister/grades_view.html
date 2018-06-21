@@ -1,0 +1,52 @@
+{% extends "schoolregister/__base.html" %}
+
+{% block title %}Grades{% endblock %}
+
+{% block content %}
+
+{% include 'schoolregister/_student_header.html' %}
+
+<div class="all_grades_container">
+  {% for taught, grade_set in grades.items %}
+    <div class="taughts_container">
+      <div class="subject-container">
+        <h4>{{ taught.subject }}</h4>
+      </div>
+      <div class="grades_container">
+        {% if grade_set|length > 0 %}
+          <ul>
+            {% for grade in grade_set %}
+              <li class="slim-li">
+                {% if grade.weight <= 0.8 %}
+                <div id="low_weight_grade">
+                  <h4><a href="{% url 'schoolregister:grade_details' student_pk=grade.student.id grade_pk=grade.id %}">
+                    {{ grade.rate }}
+                  </a></h4>
+                </div>
+                {% elif grade.weight >= 1.2 %}
+                <div id="high_weight_grade">
+                  <h4><a href="{% url 'schoolregister:grade_details' student_pk=grade.student.id grade_pk=grade.id %}">
+                    {{ grade.rate }}
+                  </a></h4>
+                </div>
+                {% else %}
+                <div id="medium_weight_grade">
+                  <h4><a href="{% url 'schoolregister:grade_details' student_pk=grade.student.id grade_pk=grade.id %}">
+                    {{ grade.rate }}
+                  </a></h4>
+                </div>
+                {% endif %}
+                <p>{{ grade.description }}</p>
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p>No grades has been given yet.</p>
+        {% endif %}
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+
+{% endblock %}

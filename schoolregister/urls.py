@@ -31,14 +31,20 @@ urlpatterns = [
     # ex: /school/student/1/
     path('student/<int:student_pk>/', include([
         path('', views.StudentView.as_view(), name='student_details'),
-        # ex: /school/student/1/grade/1/
+        # ex: /school/student/1/grades/
+        path('grades/', views.GradesView.as_view(), name='grades'),
+        # ex: /school/student/1/add-grade/
         path('add-grade/', views.GradeAddView.as_view(), name='grade_add'),
+        # ex: /school/student/1/notes/
+        path('notes', views.NotesView.as_view(), name='notes'),
+        # ex: /school/student/1/add-note/
         path('add-note/', views.NoteAddView.as_view(), name='note_add'),
+        # ex: /school/student/1/grade/1/
         path('grade/<int:grade_pk>/', include([
             path('', views.GradeView.as_view(), name='grade_details'),
             # ex: /school/student/1/grade/1/edit
             path('edit/', views.GradeEditView.as_view(), name='grade_edit'),
-            # ex: /school.student/1/grade/1/delete
+            # ex: /school/student/1/grade/1/delete
             path('delete/', views.GradeDeleteView.as_view(), name='grade_delete'),
         ])),
         # ex: /school/student/1/note/1
