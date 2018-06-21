@@ -1,0 +1,16 @@
+{% extends "schoolregister/__base.html" %}
+
+{% block title %}Notes{% endblock %}
+
+{% block content %}
+
+{% include 'schoolregister/_student_header.html' %}
+
+<div class="notes_container">
+  {% for note in notes %}
+      {% include 'schoolregister/_note_block.html' %}
+  {% endfor %}
+</div>
+
+
+{% endblock %}

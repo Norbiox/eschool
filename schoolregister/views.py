@@ -97,16 +97,18 @@ class GradesView(View):
 
     def get(self, request, *args, **kwargs):
         student = get_object_or_404(Student, id=kwargs['student_pk'])
-        #if not request.user.is_teacher or request.user.student.id != student.id:
-        #    return HttpResponseForbidden()
-        taughts = student.group.taught_set.all()
-        grades = {t:student.grade_set.filter(subject=t) for t in taughts}
-        context = {
-            'student': student,
-            'grades': grades,
-            'taughts': taughts
-        }
-        return render(request, self.template_name, context)
+        logger.debug("grades_view, is teacher: {}".format(request.user.is_teacher))
+        logger.debug("grades_view, is owner: {}".format(request.user.student == student))
+        if request.user.is_teacher or request.user.student == student:
+            taughts = student.group.taught_set.all()
+            grades = {t:student.grade_set.filter(subject=t) for t in taughts}
+            context = {
+                'student': student,
+                'grades': grades,
+                'taughts': taughts
+            }
+            return render(request, self.template_name, context)
+        return HttpResponseForbidden()
 
 
 @method_decorator(student_or_teacher_required, name='dispatch')
@@ -300,11 +302,16 @@ class NotesView(View):
 
     def get(self, request, *args, **kwargs):
         student = get_object_or_404(Student, id=kwargs['student_pk'])
-        if not request.user.is_teacher or request.user.student != student:
-            return HttpResponseForbidden()
-        notes = student.note_set.all()
-        context = {'student':student, 'notes':notes}
-        return render(request, self.template_name, context)
+        logger.debug("notes_view, is teacher: {}".format(request.user.is_teacher))
+        logger.debug("notes_view, is owner: {}".format(request.user.student == student))
+        if request.user.is_teacher or request.user.student == student:
+            notes = student.note_set.all()
+            context = {
+                'student': student,
+                'notes': notes,
+            }
+            return render(request, self.template_name, context)
+        return HttpResponseForbidden()
 
 
 @method_decorator(student_or_teacher_required, name='dispatch')

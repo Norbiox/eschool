@@ -296,6 +296,16 @@ ul h4 {
 	margin: 0px 5px;
 }
 
+.notes_container {
+	display: flex;
+    flex-wrap: wrap;
+}
+
+.note_container {
+	margin: 10px;
+	max-width: 13em;
+}
+
 .slim-li {
 	height: auto;
 	padding: 0px;
