@@ -81,3 +81,7 @@ local_settings.py
 .env
 db.sqlite3
 uploads
+<<<<<<< HEAD
+migrations
+=======
+>>>>>>> c39b8f9e821ba4e4a9ce647c6e0d85643a51dec7
