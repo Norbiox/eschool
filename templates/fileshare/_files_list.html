@@ -1,0 +1,26 @@
+{% block files_list %}
+  <ul>
+    {% for file in my_files %}
+      <li>
+        <div class="file_list_element">
+          <a href="{% url 'fileshare:show' pk=file.id %}">{{ file }}</a>
+          <h6>{{ file.description }}</h6>
+          <div style="display: inline-flex;">
+            <form class="file_inline_form" action="{% url 'fileshare:download' pk=file.id %}" method="get">
+              {% csrf_token %}
+              <input type="submit" name="download_button" value="Download">
+            </form>
+            <form class="file_inline_form" action="{% url 'fileshare:share' pk=file.id %}" method="get">
+              {% csrf_token %}
+              <input type="submit" name="share_button" value="Share">
+            </form>
+            <form class="file_inline_form" action="{% url 'fileshare:delete' pk=file.id %}" method="post">
+              {% csrf_token %}
+              <input type="submit" name="delete_button" value="Delete">
+            </form>
+          </div>
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}

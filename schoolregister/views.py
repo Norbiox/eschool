@@ -24,6 +24,16 @@ from .forms import *
 logger = logging.getLogger(__name__)
 
 
+@method_decorator(teacher_required, name='dispatch')
+class GiveGroupGradesView(View):
+    template_name = 'schoolregister/give_group_grades.html'
+
+    def get(self, request, *args, **kwargs):
+        group = get_object_or_404(Group, kwargs['abbrev'])
+        return render(request, self.template_name, {'group':group})
+
+
+
 @method_decorator(student_or_teacher_required, name='dispatch')
 class GradeView(View):
     template_name = 'schoolregister/grade_details.html'
@@ -69,16 +79,37 @@ class GradeAddView(GradeView):
             kwargs={'student_pk':student.id}))
 
 
-@method_decorator(student_or_teacher_required, name='dispatch')
+@method_decorator(teacher_required, name='dispatch')
 class GradeEditView(GradeView):
     template_name = 'schoolregister/form_base.html'
     title = "Edit grade"
 
 
-@method_decorator(student_or_teacher_required, name='dispatch')
+@method_decorator(teacher_required, name='dispatch')
 class GradeDeleteView(GradeView):
     template_name = 'schoolregister/form_base.html'
     title = "Delete grade"
+
+
+@method_decorator(student_or_teacher_required, name='dispatch')
+class GradesView(View):
+    template_name = 'schoolregister/grades_view.html'
+
+    def get(self, request, *args, **kwargs):
+        student = get_object_or_404(Student, id=kwargs['student_pk'])
+        logger.debug("grades_view, is teacher: {}".format(request.user.is_teacher))
+        if request.user.is_student:
+            logger.debug("grades_view, is owner: {}".format(request.user.student == student))
+        if request.user.is_teacher or request.user.student == student:
+            taughts = student.group.taught_set.all()
+            grades = {t:student.grade_set.filter(subject=t) for t in taughts}
+            context = {
+                'student': student,
+                'grades': grades,
+                'taughts': taughts
+            }
+            return render(request, self.template_name, context)
+        return HttpResponseForbidden()
 
 
 @method_decorator(student_or_teacher_required, name='dispatch')
@@ -155,7 +186,6 @@ class LessonPortalView(View):
             student = request.user.student
             context = { 'student':student,
                         'active_lesson':student.active_lesson() }
-        print(context['active_lesson'])
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
@@ -165,7 +195,7 @@ class LessonPortalView(View):
             if form.is_valid():
                 form.save(request.user)
                 return HttpResponseRedirect(reverse('schoolregister:lesson_details', \
-                    kwargs={'lesson_pk':lesson.id}))
+                    kwargs={'lesson_pk':teacher.active_lesson().id}))
         return HttpResponseRedirect(reverse('schoolregister:lesson_portal'))
 
 
@@ -180,22 +210,26 @@ class LessonView(View):
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
-        context = {}
-        context['lesson'] = get_object_or_404(Lesson, pk=kwargs['lesson_pk'])
-        context['presences'] = context['lesson'].presence_set.all()
+        lesson = get_object_or_404(Lesson, pk=kwargs['lesson_pk'])
+        presences = lesson.presence_set.all()
         logger.info("POST: {}".format(request.POST))
         if request.POST.get("submit"):
             present_student_ids = list(map(int,request.POST.getlist('present')))
-            for presence in context['presences']:
+            for presence in presences:
                 if presence.student.id in present_student_ids:
                     presence.state = True
                 else:
                     presence.state = False
-                presence.save(request.user)
+                presence.save()
+            context = {
+                'lesson': lesson,
+                'presences': presences
+            }
         elif request.POST.get("end_lesson"):
-            context['lesson'].end_time = timezone.now()
-            context['lesson'].save()
-            logger.info("Lesson save with end_time {}".format(context['lesson'].end_time))
+            lesson.end_time = timezone.now()
+            lesson.save()
+            logger.info("Lesson save with end_time {}".format(lesson.end_time))
+            context = {'lesson':lesson}
         return render(request, self.template_name, context)
 
 
@@ -220,7 +254,7 @@ class NoteView(View):
             kwargs={'student_pk':student.id}))
 
 
-@method_decorator(student_or_teacher_required, name='dispatch')
+@method_decorator(teacher_required, name='dispatch')
 class NoteAddView(NoteView):
     template_name = 'schoolregister/note_details.html'
 
@@ -244,7 +278,7 @@ class NoteAddView(NoteView):
             kwargs={'student_pk':student.id}))
 
 
-@method_decorator(student_or_teacher_required, name='dispatch')
+@method_decorator(teacher_required, name='dispatch')
 class NoteEditView(View):
     template_name = 'schoolregister/note_details.html'
 
@@ -253,13 +287,32 @@ class NoteEditView(View):
         return render(request, self.template_name, {'note':note})
 
 
-@method_decorator(student_or_teacher_required, name='dispatch')
+@method_decorator(teacher_required, name='dispatch')
 class NoteDeleteView(View):
     template_name = 'schoolregister/note_details.html'
 
     def get(self, request, *args, **kwargs):
         note = get_object_or_404(Note, pk=kwargs['note_pk'])
         return render(request, self.template_name, {'note':note})
+
+
+@method_decorator(student_or_teacher_required, name='dispatch')
+class NotesView(View):
+    template_name = 'schoolregister/notes_view.html'
+
+    def get(self, request, *args, **kwargs):
+        student = get_object_or_404(Student, id=kwargs['student_pk'])
+        logger.debug("notes_view, is teacher: {}".format(request.user.is_teacher))
+        if request.user.is_student:
+            logger.debug("notes_view, is owner: {}".format(request.user.student == student))
+        if request.user.is_teacher or request.user.student == student:
+            notes = student.note_set.all()
+            context = {
+                'student': student,
+                'notes': notes,
+            }
+            return render(request, self.template_name, context)
+        return HttpResponseForbidden()
 
 
 @method_decorator(student_or_teacher_required, name='dispatch')
@@ -297,7 +350,9 @@ class TaughtView(View):
 
     def get(self, request, *args, **kwargs):
         taught = get_object_or_404(Taught, pk=kwargs['taught_pk'])
-        return render(request, self.template_name, {'taught':taught})
+        lessons = Lesson.objects.filter(taught=taught)
+        context = {'taught':taught, 'lessons':lessons}
+        return render(request, self.template_name, context)
 
 
 @method_decorator(student_or_teacher_required, name='dispatch')

@@ -1,5 +1,4 @@
 from django.urls import path, re_path, include
-from django.conf.urls import url
 from django.contrib.auth import views as auth_views
 from django.views.static import serve
 
@@ -14,15 +13,5 @@ urlpatterns = [
     path('<int:pk>/profile/', include([
         path('', views.ProfileView.as_view(), name='profile'),
     ])),
-    path('file/<int:pk>/', include([
-        path('delete/', views.FileDeleteView.as_view(), name='file-delete'),
-        path('share/', views.FileShareView.as_view(), name='file-share'),
-    ])),
+    path('contact/', views.ContactView.as_view(), name='contact'),
 ]
-
-if settings.DEBUG:
-    urlpatterns += [
-        url(r'^media/(?P<path>.*)$', serve, {
-            'document_root': settings.MEDIA_ROOT,
-        }),
-    ]

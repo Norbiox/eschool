@@ -1,0 +1,19 @@
+<details>
+  <summary>
+    Grades
+    <h6>
+      <a>roll down</a>
+      <a href="{% url 'schoolregister:grades' student_pk=student.id %}">see all</a>
+    </h6>
+  </summary>
+  <ul>
+    {% for taught in student.group.taught_set.all %}
+      <li>
+        <a href="{% url 'schoolregister:taught_details' taught.id %}">{{ taught.subject }}</a>
+        <p>&nbsp teacher: </p>
+        <a href="{% url 'schoolregister:teacher_details' taught.teacher.id %}">{{ taught.teacher }}</a>
+        {% include 'schoolregister/_student_grades_inline.html' with grades=student.grade_set.all %}
+      </li>
+    {% endfor %}
+  </ul>
+</details>

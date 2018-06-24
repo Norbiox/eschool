@@ -1,0 +1,19 @@
+<details open>
+  <summary>
+    Lessons from {{ lesson.taught }}
+    <h6>
+      <a>roll down</a>
+      <a href="#">see all</a>
+    </h6>
+  </summary>
+  <ul>
+    {% for lesson in taught.lesson_set.all %}
+      <li>
+        <a href="{% url 'schoolregister:lesson_details' lesson.id %}">{{ lesson.number_of }}</a>
+        <p>&nbsp Topic: </p>
+        <a href="{% url 'schoolregister:lesson_details' lesson.id %}">{{ lesson.topic }}</a>
+        <h6 style="margin-right: inherit;">{{ lesson.start_time }}</h6>
+      </li>
+    {% endfor %}
+  </ul>
+</details>

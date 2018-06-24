@@ -1,0 +1,16 @@
+<details>
+  <summary>
+    Notes
+    <h6>
+      <a>roll down</a>
+      <a href="{% url 'schoolregister:notes' student_pk=student.id %}">see all</a>
+    </h6>
+  </summary>
+  <ul>
+    {% for note in student.note_set.all %}
+      <li>
+        {% include 'schoolregister/_note_inline.html' %}
+      </li>
+    {% endfor %}
+  </ul>
+</details>

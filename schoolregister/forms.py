@@ -58,7 +58,7 @@ class LessonForm(forms.Form):
     def save(self, user, *args, **kwargs):
         lesson = Lesson(
             taught=self.cleaned_data['Class&Subject'],
-            teacher=teacher,
+            teacher=user.teacher,
             start_time=timezone.now(),
             topic=self.cleaned_data['Topic']
         )

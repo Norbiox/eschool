@@ -202,6 +202,9 @@ class Grade(models.Model):
     def get_absolute_url(self):
         return reverse('schoolregister:grade_details', kwargs={'pk':self.pk})
 
+    def all_from_this_taught_and_student(self):
+        return Grade.objects.filter(student=self.student).filter(subject=self.subject)
+
 
 class Lesson(models.Model):
 

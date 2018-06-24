@@ -16,9 +16,6 @@ import logging.config
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-MEDIA_URL = '/uploads/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
@@ -35,6 +32,7 @@ ALLOWED_HOSTS = ['localhost','192.168.2.100']
 # Application definition
 
 INSTALLED_APPS = [
+    'fileshare.apps.FileshareConfig',
     'home.apps.HomeConfig',
     'schoolregister.apps.SchoolregisterConfig',
     'django.contrib.admin',
@@ -127,6 +125,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+#STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+    '/var/www/static/',
+]
+
+MEDIA_URL = '/uploads/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
 
 LOGGING_CONFIG = None
 logging.config.dictConfig({
@@ -157,6 +163,11 @@ logging.config.dictConfig({
             'propagate': False,
         },
         'schoolregister': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+        'fileshare': {
             'level': 'DEBUG',
             'handlers': ['console'],
             'propagate': False,

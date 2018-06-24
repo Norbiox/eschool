@@ -16,58 +16,13 @@ from django.views.decorators.debug import sensitive_post_parameters
 from django.utils.http import is_safe_url
 
 from .models import *
-from .forms import *
 
 
-@method_decorator(login_required, name='dispatch')
-class FileDeleteView(View):
-
-    def post(self, request, *args, **kwargs):
-        file = get_object_or_404(File, id=kwargs['pk'])
-        if file.owner == request.user:
-            file.delete()
-            return HttpResponseRedirect(reverse('home:profile', \
-                kwargs={'pk':request.user.id}))
-        return HttpResponseForbidden()
-
-
-@method_decorator(login_required, name='dispatch')
-class FileShareView(View):
-    template_name = 'home/share_file.html'
+class ContactView(View):
+    template_name = 'home/contact.html'
 
     def get(self, request, *args, **kwargs):
-        file = get_object_or_404(File, id=kwargs['pk'])
-        context = {
-            'file' : file,
-            'group_share_form' : ShareWithClassForm(),
-            'user_share_form' : ShareWithUserForm(),
-        }
-        return render(request, self.template_name, context)
-
-    def post(self, request, *args, **kwargs):
-        file = get_object_or_404(File, id=kwargs['pk'])
-        if request.user != file.owner:
-            return HttpResponseForbidden()
-        if 'user-share-submit' in request.POST:
-            form = ShareWithUserForm(request.POST)
-            if form.is_valid():
-                share = Share()
-                share.file = file
-                share.shared_to = form.cleaned_data['shared_to']
-                share.shared_at = timezone.now()
-                share.save()
-        elif 'group-share-submit' in request.POST:
-            form = ShareWithClassForm(request.POST)
-            if form.is_valid():
-                group = form.cleaned_data['group']
-                for student in group.student_set.all():
-                    share = Share()
-                    share.file = file
-                    share.shared_to = student.user
-                    share.shared_at = timezone.now()
-                    share.save()
-        return HttpResponseRedirect(reverse('home:profile', \
-            kwargs={'pk':request.user.id}))
+        return render(request, self.template_name, {})
 
 
 class IndexView(View):
@@ -84,24 +39,17 @@ class ProfileView(View):
 
     def get(self, request, *args, **kwargs):
         user = get_object_or_404(User, id=kwargs['pk'])
+        if user.is_teacher:
+            return HttpResponseRedirect(reverse(
+                'schoolregister:teacher_details', kwargs={'teacher_pk':user.teacher.id}
+            ))
+        if user.is_student:
+            return HttpResponseRedirect(reverse(
+                'schoolregister:student_details', kwargs={'student_pk':user.student.id}
+            ))
         viewer = request.user
-        form_class = FileForm
         context = {
             'user' : user,
-            'viewer' : viewer,
-            'add_file_form' : form_class()
+            'viewer' : viewer
         }
         return render(request, self.template_name, context)
-
-    def post(self, request, *args, **kwargs):
-        if request.POST['upload_submit']:
-            form = FileForm(request.POST, request.FILES)
-            if form.is_valid():
-                file = form.save(commit=False)
-                file.owner = request.user
-                file.uploaded_at = timezone.now()
-                file.save()
-            else:
-                print(form)
-        return HttpResponseRedirect(reverse('home:profile', \
-            kwargs={'pk':request.user.id}))
