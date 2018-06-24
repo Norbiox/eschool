@@ -79,13 +79,13 @@ class GradeAddView(GradeView):
             kwargs={'student_pk':student.id}))
 
 
-@method_decorator(teacher_required, name='dispatch')
+@method_decorator(student_or_teacher_required, name='dispatch')
 class GradeEditView(GradeView):
     template_name = 'schoolregister/form_base.html'
     title = "Edit grade"
 
 
-@method_decorator(teacher_required, name='dispatch')
+@method_decorator(student_or_teacher_required, name='dispatch')
 class GradeDeleteView(GradeView):
     template_name = 'schoolregister/form_base.html'
     title = "Delete grade"
@@ -254,7 +254,7 @@ class NoteView(View):
             kwargs={'student_pk':student.id}))
 
 
-@method_decorator(teacher_required, name='dispatch')
+@method_decorator(student_or_teacher_required, name='dispatch')
 class NoteAddView(NoteView):
     template_name = 'schoolregister/note_details.html'
 
@@ -278,7 +278,7 @@ class NoteAddView(NoteView):
             kwargs={'student_pk':student.id}))
 
 
-@method_decorator(teacher_required, name='dispatch')
+@method_decorator(student_or_teacher_required, name='dispatch')
 class NoteEditView(View):
     template_name = 'schoolregister/note_details.html'
 
@@ -287,7 +287,7 @@ class NoteEditView(View):
         return render(request, self.template_name, {'note':note})
 
 
-@method_decorator(teacher_required, name='dispatch')
+@method_decorator(student_or_teacher_required, name='dispatch')
 class NoteDeleteView(View):
     template_name = 'schoolregister/note_details.html'
 
