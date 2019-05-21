@@ -1,9 +1,9 @@
-from django.urls import path, re_path, include
+from django.urls import path, include
 
-from eschool import settings
 from . import views
 
-app_name='fileshare'
+
+app_name = 'fileshare'
 urlpatterns = [
     path('', views.IndexView.as_view(), name='index'),
     path('<int:pk>/', include([

@@ -1,12 +1,5 @@
 # -*- coding: utf-8 -*-
-
-import logging
-import os
-
 from django.contrib.auth.models import AbstractUser
-from django.core.exceptions import ValidationError
-from django.core.validators import MinValueValidator, MaxValueValidator, \
-    RegexValidator
 from django.db import models
 
 
@@ -31,8 +24,8 @@ class User(AbstractUser):
     def get_last_actions(self):
         """Gets last actions interesting for user.
         If user is student last actions are false-presences, grades and notes.
-        If user is teacher last actions are false-presences, grades and notes of
-            students of class that user is supervising, or nothing if user
+        If user is teacher last actions are false-presences, grades and notes
+            of students of class that user is supervising, or nothing if user
             is not supervisor of any class."""
         if self.is_student:
             return None

@@ -2,16 +2,18 @@
 
 import os
 import mimetypes
-from django.http import HttpResponse, HttpResponseRedirect, Http404, HttpResponseForbidden
-from django.shortcuts import get_object_or_404, redirect, render, render_to_response
-from django.urls import resolve, reverse
-from django.views import generic, View
+from django.http import (
+    HttpResponse, HttpResponseRedirect, HttpResponseForbidden
+)
+from django.shortcuts import get_object_or_404, render
+from django.urls import reverse
+from django.views import View
 from django.contrib.auth.decorators import login_required
+from django.utils import timezone
 from django.utils.decorators import method_decorator
 
-from eschool import settings
-from .models import *
-from .forms import *
+from .models import File, Share
+from .forms import FileForm, ShareWithClassForm, ShareWithUserForm
 
 
 @method_decorator(login_required, name='dispatch')
@@ -34,7 +36,9 @@ class FileDownloadView(View):
         file = get_object_or_404(File, id=kwargs['pk'])
         with open(file.path(), 'rb') as f:
             data = f.read()
-        response = HttpResponse(data, content_type=mimetypes.guess_type(file.path())[0])
+        response = HttpResponse(
+            data, content_type=mimetypes.guess_type(file.path())[0]
+        )
         response['Content-Disposition'] = "attachment; filename={0}".format(file)
         response['Content-Length'] = os.path.getsize(file.path())
         return response
@@ -47,9 +51,9 @@ class FileShareView(View):
     def get(self, request, *args, **kwargs):
         file = get_object_or_404(File, id=kwargs['pk'])
         context = {
-            'file' : file,
-            'group_share_form' : ShareWithClassForm(),
-            'user_share_form' : ShareWithUserForm(),
+            'file': file,
+            'group_share_form': ShareWithClassForm(),
+            'user_share_form': ShareWithUserForm(),
         }
         return render(request, self.template_name, context)
 

@@ -26,7 +26,7 @@ SECRET_KEY = '-(^#cu-pz1tu65pp@udm6s3w+e+xim+e+0uf^tku^-%j^3as8j'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost','192.168.2.100']
+ALLOWED_HOSTS = ['localhost']
 
 
 # Application definition
@@ -125,7 +125,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
-#STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
     '/var/www/static/',
@@ -151,7 +151,7 @@ logging.config.dictConfig({
         },
     },
     'loggers': {
-    # root logger
+        # root logger
         'eschool': {
             'level': 'DEBUG',
             'handlers': ['console'],
