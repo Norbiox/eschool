@@ -19,14 +19,16 @@ Project consists of 3 django applications described below.
 
 This is a simplified relational database schema used in application:
 
-![dbschema](https://raw.githubusercontent.com/Norbiox/eschool/master/school_book.png)
+![dbschema](https://raw.githubusercontent.com/Norbiox/eschool/master/images/school_book.png)
 
 
 ### Home
 
 Serves as a home page of school for visitors.
 Contains news page, school informations page and contact page.
+Also serves as a login page for teachers and students.
 
+![loginpage](https://raw.githubusercontent.com/Norbiox/eschool/master/images/loginpage.png)
 
 ### SchoolRegister
 
