@@ -1,9 +1,9 @@
 # eschool
 This is a project of web application, prepared for schools, serves as:
 
-    * home page of school for visitors
-    * school register for teachers and students
-    * file sharing system for teachers and students
+* home page of school for visitors
+* school register for teachers and students
+* file sharing system for teachers and students
 
 
 ## Technology stack
@@ -33,10 +33,10 @@ Contains news page, school informations page and contact page.
 This application is meant to be used by logged in teachers and students only.
 It allows to:
 
-    * search and view students and teachers informations
-    * view students presences on lessons, grades and notes
-    * manage lessons and students presences on thems (only for teachers)
-    * manage students grades and notes (like for bad behaviour) (only for teachers)
+* search and view students and teachers informations
+* view students presences on lessons, grades and notes
+* manage lessons and students presences on thems (only for teachers)
+* manage students grades and notes (like for bad behaviour) (only for teachers)
 
 SchoolRegister has view restrictions.
 Certain students informations like grades can be viewed only by owner or related teacher (who gave particular grade).
